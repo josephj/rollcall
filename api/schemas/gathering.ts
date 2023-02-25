@@ -1,5 +1,7 @@
 import type {Rule as RuleType} from '@sanity/types'
 
+import {slugify} from '../utils'
+
 export const gathering = {
   name: 'gathering',
   title: 'Gathering',
@@ -42,5 +44,28 @@ export const gathering = {
         {type: 'occurrence'}
       ],
     },
+    {
+      name: 'slug',
+      type: 'slug',
+      title: 'Slug',
+      options: {
+        source: 'name',
+        maxLength: 200,
+        slugify: (input: string) => slugify(input),
+      },
+      validation: (Rule: RuleType) => Rule.required(),
+    },
   ],
+  preview: {
+    select: {
+      name: 'name',
+      slug: 'slug',
+    },
+    prepare: ({name, slug}) => {
+      return {
+        title: name,
+        subtitle: `/${slug.current}`,
+      }
+    },
+  },
 }

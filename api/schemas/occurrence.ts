@@ -12,35 +12,31 @@ export const occurrence = {
       validation: (Rule: RuleType) => Rule.required(),
     },
     {
-      name: 'attendance',
-      title: 'Attendance',
+      name: 'attendances',
+      title: 'Attendances',
       type: 'array',
-      of: [
-        {
-          type: 'object',
-          fields: [
-            {
-              name: 'member',
-              type: 'reference',
-              to: [{type: 'member'}],
-            },
-            {
-              name: 'note',
-              type: 'string',
-            },
-          ],
-          preview: {
-            select: {
-              memberName: 'member.name',
-            },
-            prepare({memberName}) {
-              return {
-                title: memberName,
-              }
-            },
-          },
-        },
-      ],
+      of: [{type: 'attendance'}],
+          // fields: [
+          //   {
+          //     name: 'member',
+          //     type: 'reference',
+          //     to: [{type: 'member'}],
+          //   },
+          //   {
+          //     name: 'note',
+          //     type: 'string',
+          //   },
+          // ],
+          // preview: {
+          //   select: {
+          //     memberName: 'member.name',
+          //   },
+          //   prepare({memberName}) {
+          //     return {
+          //       title: memberName,
+          //     }
+          //   },
+          // },
       validation: (Rule: RuleType) =>
         Rule.custom((attendance = []) => {
           const members = attendance.map(({member}) => member?._ref).filter(Boolean)
