@@ -1,12 +1,12 @@
 import { gql, useQuery } from "@apollo/client";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 const GET_GATHERING_LIST = gql`
   query {
-    allOrganization {
+    allGathering {
       _id
       slug {
-        current
+          current
       }
       title
       name
@@ -14,7 +14,7 @@ const GET_GATHERING_LIST = gql`
   }
 `;
 
-const App = () => {
+export const Gatherings = () => {
   const { loading, error, data } = useQuery(GET_GATHERING_LIST);
 
   if (loading) return <p>Loading...</p>;
@@ -22,15 +22,15 @@ const App = () => {
 
   return (
     <div>
-      <h1>Organization List</h1>
-      {data.allOrganization.map(({ _id, slug, title, name }) => (
+      <h1>Gathering List</h1>
+      {data.allGathering.map(({ _id, title, name, slug }) => (
         <div key={_id}>
-          <Link to={`/${slug.current}/gatherings`}>{title}</Link>
+          <h2>
+            <Link to={slug.current}>{title}</Link>
+          </h2>
           <p>{name}</p>
         </div>
       ))}
     </div>
   );
 };
-
-export default App;
