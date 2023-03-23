@@ -37,4 +37,16 @@ export const member = {
       of: [{ type: 'reference', to: [{ type: 'gathering' }] }],
     },
   ],
+  preview: {
+    select: {
+      name: 'name',
+      alias: 'alias',
+    },
+    prepare: ({name, alias}) => {
+      return {
+        title: name,
+        subtitle: alias
+      }
+    },
+  },
 };

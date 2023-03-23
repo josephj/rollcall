@@ -3,11 +3,14 @@ import ReactDOM from "react-dom/client";
 import { ApolloProvider } from "@apollo/client";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { NativeBaseProvider } from "native-base";
 
-import "./index.css";
-import App from "./App";
+import { App } from "./App";
 import reportWebVitals from "./reportWebVitals";
-import {Gatherings} from './Gatherings'
+import { Gatherings } from "./Gatherings";
+import { Gathering } from "./Gathering";
+import { Occurrence } from "./Occurrence";
+import "./index.css";
 
 export const client = new ApolloClient({
   uri: "https://5wmwst53.api.sanity.io/v1/graphql/production/default",
@@ -17,11 +20,31 @@ export const client = new ApolloClient({
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App/>,
+    element: <App />,
   },
   {
     path: "/:org/gatherings",
-    element: <Gatherings/>,
+    element: <Gatherings />,
+  },
+  {
+    path: "/organization/:org/gatherings",
+    element: <Gatherings />,
+  },
+  {
+    path: "/:org/gatherings/:slug",
+    element: <Gathering />,
+  },
+  {
+    path: "/organization/:org/gatherings/:slug",
+    element: <Gathering />,
+  },
+  {
+    path: "/:org/gatherings/:slug/:date",
+    element: <Occurrence />,
+  },
+  {
+    path: "/organization/:org/gatherings/:slug/:date",
+    element: <Occurrence />,
   },
 ]);
 
@@ -29,7 +52,9 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <ApolloProvider {...{ client }}>
-      <RouterProvider router={router} />
+      <NativeBaseProvider>
+        <RouterProvider router={router} />
+      </NativeBaseProvider>
     </ApolloProvider>
   </React.StrictMode>
 );
