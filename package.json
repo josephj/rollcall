@@ -9,5 +9,11 @@
   "workspaces": [
     "./api",
     "./ui"
-  ]
+  ],
+  "scripts": {
+    "start": "concurrently \"yarn workspace rollcall-ui start\" \"yarn workspace rollcall-api dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.1"
+  }
 }

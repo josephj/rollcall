@@ -1,6 +1,6 @@
 import { gql, useQuery } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
-import { Container, Heading, Flex, Stack, Text } from "native-base";
+import { Container, Flex, Stack, Text } from "native-base";
 
 import { Card, Header } from "./components";
 

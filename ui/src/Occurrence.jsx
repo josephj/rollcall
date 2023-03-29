@@ -4,15 +4,15 @@ import groq from "groq";
 
 import {
   Box,
-  Center,
+  Container,
   Checkbox,
-  Heading,
+  Flex,
   HStack,
   Stack,
   Text,
 } from "native-base";
 
-import { Card } from "./components";
+import { Card, Header } from "./components";
 import { sanityClient } from "./sanityClient";
 
 const query = groq`
@@ -44,7 +44,7 @@ export const Occurrence = () => {
       }
     };
     loadGathering();
-  }, [slug]);
+  }, [date, slug]);
 
   if (!gathering) {
     return;
@@ -58,13 +58,11 @@ export const Occurrence = () => {
   } = gathering || {};
 
   const [{ attendances = [], _key: occurrenceKey }] = occurrences || [];
-  console.log("-> occurrenceKey", occurrenceKey);
 
   const memberIds = attendances.map(({ member }) => member?._ref);
 
   const handleCheckMember = async ({ memberId, attendanceKey }) => {
     const isAdding = !memberIds.includes(memberId);
-    console.log("-> attendanceKey", attendanceKey);
 
     if (isAdding) {
       const attendanceData = {
@@ -92,49 +90,55 @@ export const Occurrence = () => {
   };
 
   return (
-    <Center marginY={5}>
-      <Stack alignItems="center" space={2} width="96">
-        <Heading size="md">
-          <HStack>
-            <Box whiteSpace="nowrap">
-              <Link to={`/${org}/gatherings/${slug}`}>{title}</Link>
-              <Text> &gt; {date}</Text>
+    <Stack flexDirection="column" height="100%" space={5}>
+      <Header>
+        <Text fontSize="lg" fontWeight="500">
+          <Link to={`/${org}/gatherings/${slug}`}>
+            {title} ({slug})
+          </Link>{" "}
+          &gt; {date}
+        </Text>
+      </Header>
+      <Flex alignItems="center" justifyContent="flex-start" flexGrow="1">
+        <Container>
+          <Stack space={5}>
+            <Box alignSelf="center" textAlign="center">
+              <Text>Attendances: {attendances.length}</Text>
             </Box>
-            <Text fontSize="12px">
-              ( {attendances.length} / {members.length})
-            </Text>
-          </HStack>
-        </Heading>
-        <Stack space={5}>
-          {members.map(({ _id: memberId, name, alias }) => (
-            <Card
-              key={memberId}
-              onClick={() => {
-                const attendance = attendances.find(
-                  ({ member }) => member._ref === memberId
-                );
-                const attendanceKey = attendance?._key;
-                console.log("-> attendanceKey", attendanceKey);
+            <Stack space={5}>
+              {members.map(({ _id: memberId, name, alias }) => (
+                <Card
+                  key={memberId}
+                  textAlign="center"
+                  minWidth="250px"
+                  onClick={() => {
+                    const attendance = attendances.find(
+                      ({ member }) => member._ref === memberId
+                    );
+                    const attendanceKey = attendance?._key;
+                    console.log("-> attendanceKey", attendanceKey);
 
-                handleCheckMember({
-                  memberId: memberId,
-                  attendanceKey,
-                });
-              }}
-            >
-              <Checkbox
-                defaultIsChecked={memberIds.includes(memberId)}
-                value={memberId}
-              >
-                <HStack space="sm">
-                  <span>{name}</span>
-                  <Text size="xsmall">{alias}</Text>
-                </HStack>
-              </Checkbox>
-            </Card>
-          ))}
-        </Stack>
-      </Stack>
-    </Center>
+                    handleCheckMember({
+                      memberId: memberId,
+                      attendanceKey,
+                    });
+                  }}
+                >
+                  <Checkbox
+                    defaultIsChecked={memberIds.includes(memberId)}
+                    value={memberId}
+                  >
+                    <HStack space="2">
+                      <Text fontWeight="500">{name}</Text>
+                      <Text size="xsmall">{alias}</Text>
+                    </HStack>
+                  </Checkbox>
+                </Card>
+              ))}
+            </Stack>
+          </Stack>
+        </Container>
+      </Flex>
+    </Stack>
   );
 };

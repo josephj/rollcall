@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import groq from "groq";
-import {Link, useNavigate, useParams} from 'react-router-dom'
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
-  Center,
+  Box,
+  Container,
   Flex,
   HStack,
   Heading,
@@ -13,8 +14,7 @@ import {
 import { rrulestr } from "rrule";
 import dayjs from "dayjs";
 
-import { Card } from "./components";
-
+import { Card, Header } from "./components";
 import { sanityClient } from "./sanityClient";
 
 const query = groq`
@@ -35,10 +35,9 @@ const query = groq`
 
 export const Gathering = () => {
   const params = useParams();
-  const { org, slug } = params
-  console.log("-> params", params);
+  const { org, slug } = params;
   const [gathering, setGathering] = useState();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   useEffect(() => {
     const loadGathering = async () => {
       try {
@@ -64,14 +63,7 @@ export const Gathering = () => {
     );
   }
 
-  const {
-    _id,
-    location,
-    members = [],
-    occurrences = [],
-    recurrence,
-    title,
-  } = gathering;
+  const { _id, location, occurrences = [], recurrence, title } = gathering;
 
   const rrule = rrulestr(recurrence);
   const endDate = dayjs().endOf("day");
@@ -85,42 +77,51 @@ export const Gathering = () => {
 
   const handleClickCreate = async (date) => {
     await sanityClient.patch(_id).append("occurrences", [{ date }]).commit();
-    navigate(`/${org}/gatherings/${slug}/${date}`)
+    navigate(`/${org}/gatherings/${slug}/${date}`);
   };
 
   return (
-    <Center marginY={5}>
-      <Stack alignItems="center" space={2} width="96">
-        <Heading size="lg">{title}</Heading>
-        <Heading size="sm">{slug}</Heading>
-        <Text>{location}</Text>
-        <Text>{rrule.toText()}</Text>
-        <Stack space="5">
-          {upcomingDates.map((date) => (
-            <Card
-              key={date}
-              height="auto"
-              size="md"
-              textAlign="center"
-              onClick={() => handleClickCreate(date)}
-            >
-              <Text fontWeight="500">{date}</Text>
-            </Card>
-          ))}
-        </Stack>
-        <hr />
-        <Stack space="5">
-          {occurrences.map(({ _key, date, attendances = [], ...rest }) => (
-            <Card key={_key} height="auto" size="md" textAlign="center">
-              <Link to={date}>
-                <Text fontWeight="500">
-                  {date} ({attendances.length} / {members.length})
-                </Text>
+    <Stack flexDirection="column" height="100%" space={5}>
+      <Header>
+        <Text fontSize="lg" fontWeight="500">
+          <Link to={`/${org}/gatherings`}>Gatherings</Link> &gt; {title}
+        </Text>
+      </Header>
+      <Flex alignItems="center" justifyContent="flex-start" flexGrow="1">
+        <Container>
+          <Box alignSelf="center" textAlign="center">
+            <Text>{location}</Text>
+            <Text>{rrule.toText()}</Text>
+          </Box>
+          <Stack space="5">
+            {upcomingDates.map((date) => (
+              <Card
+                key={date}
+                height="auto"
+                size="md"
+                textAlign="center"
+                onClick={() => handleClickCreate(date)}
+              >
+                <Text fontWeight="500">{date}</Text>
+              </Card>
+            ))}
+            <hr />
+            {occurrences.map(({ _key, date, attendances = [], ...rest }) => (
+              <Link to={date} style={{ textDecoration: "none" }}>
+                <Card key={_key} textAlign="center" minWidth="250px">
+                  <Text fontSize="13" fontWeight="500">
+                    {date}
+                  </Text>
+                  <Text fontSize="11">
+                    Attendances:{" "}
+                    <Text fontWeight="500">{attendances.length}</Text>
+                  </Text>
+                </Card>
               </Link>
-            </Card>
-          ))}
-        </Stack>
-      </Stack>
-    </Center>
+            ))}
+          </Stack>
+        </Container>
+      </Flex>
+    </Stack>
   );
 };
