@@ -30,15 +30,15 @@ export const Gatherings = () => {
           Gatherings
         </Text>
       </Header>
-      <Flex
-        alignItems="center"
-        flexGrow="1"
-        justifyContent="center"
-      >
+      <Flex alignItems="center" flexGrow="1" justifyContent="center">
         <Container>
           <Stack space={5}>
             {data.allGathering.map(({ _id, title, name, slug }) => (
-              <Link to={slug.current} style={{ textDecoration: "none" }}>
+              <Link
+                key={_id}
+                to={slug.current}
+                style={{ textDecoration: "none" }}
+              >
                 <Card textAlign="center" minWidth="250px">
                   <Text fontWeight="500">{title}</Text>
                   <Text fontSize="11px">{name}</Text>

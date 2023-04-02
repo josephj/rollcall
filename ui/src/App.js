@@ -25,7 +25,7 @@ export const App = () => {
   if (error) return <p>Error :(</p>;
 
   const handleClick = (slug) => {
-    navigate(`/organization/${slug}/gatherings`)
+    navigate(`/${slug}/gatherings`)
   };
 
   return (
