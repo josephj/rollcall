@@ -14,6 +14,7 @@
     "start": "concurrently \"yarn workspace rollcall-ui start\" \"yarn workspace rollcall-api dev\""
   },
   "devDependencies": {
+    "@babel/plugin-syntax-jsx": "^7.21.4",
     "concurrently": "^8.0.1"
   }
 }

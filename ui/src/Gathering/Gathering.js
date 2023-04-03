@@ -74,8 +74,9 @@ export const Gathering = () => {
   const handleClickCreate = async (date) => {
     await sanityClient
       .patch(_id)
+      .setIfMissing({ occurrences: [] })
       .append("occurrences", [{ date, attendances: [], _type: "occurrence" }])
-      .commit();
+      .commit({ autoGenerateArrayKeys: true });
 
     navigate(`/${org}/gatherings/${slug}/${date}`);
   };
@@ -98,15 +99,14 @@ export const Gathering = () => {
             {notCreatedDates.length ? (
               <Stack as="section" space="5">
                 <Heading size="sm" textAlign="center">
-                  Not Created
+                  Not Established
                 </Heading>
                 <Stack space="5">
                   {notCreatedDates.map((date) => (
                     <Card
                       key={date}
-                      height="auto"
-                      size="md"
                       textAlign="center"
+                      minWidth="250px"
                       onClick={() => handleClickCreate(date)}
                     >
                       <Text fontWeight="500">{date}</Text>
@@ -121,7 +121,7 @@ export const Gathering = () => {
             {createdDates.length ? (
               <Stack space="5">
                 <Heading size="sm" textAlign="center">
-                  Created
+                  Established
                 </Heading>
                 <Stack space="5">
                   {occurrences.map(({ _key, date, attendances = [] }) => (
