@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import groq from "groq";
 
 import {
   Box,
@@ -14,40 +13,38 @@ import {
 } from "native-base";
 
 import { Card, Header } from "../components";
-import { sanityClient } from "../sanityClient";
-import { AddButton, AddMemberModal } from "./Elements";
-
-const query = groq`
-  *[_type == "gathering" && slug.current == $slug][0] {
-    _key,
-    _id,
-    title,
-    location,
-    occurrences[date == $date],
-    "members": *[_type == "member" && references(^._id)] | order(name) {
-      _id,
-      name,
-      alias,
-    }
-  }
-`;
+import { AddMemberModal } from "./AddMemberModal";
+import { AddButton } from "./Elements";
+import { useApi } from "./useApi";
 
 export const Occurrence = () => {
   const { slug, date, org } = useParams();
   const [gathering, setGathering] = useState();
+  const [isSaving, setSaving] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclose();
+  const {
+    addMember,
+    createMember,
+    fetchOccurrence,
+    tickAttendance,
+    untickAttendance,
+  } = useApi({
+    date,
+    slug,
+  });
+
+  const loadGathering = useCallback(async () => {
+    try {
+      const gathering = await fetchOccurrence();
+      setGathering(gathering);
+    } catch (e) {
+      console.error(e.message);
+    }
+  }, [fetchOccurrence]);
 
   useEffect(() => {
-    const loadGathering = async () => {
-      try {
-        const gathering = await sanityClient.fetch(query, { date, slug });
-        setGathering(gathering);
-      } catch (e) {
-        console.error(e.message);
-      }
-    };
     loadGathering();
-  }, [date, slug]);
+  }, [date, fetchOccurrence, loadGathering, slug]);
 
   if (!gathering) {
     return;
@@ -66,30 +63,33 @@ export const Occurrence = () => {
 
   const handleCheckMember = async ({ memberId, attendanceKey }) => {
     const isAdding = !memberIds.includes(memberId);
-
     if (isAdding) {
-      const attendanceData = {
-        _type: "attendance",
-        member: {
-          _ref: memberId,
-          _type: "reference",
-        },
-      };
-
-      sanityClient
-        .patch(gatheringId)
-        .append(`occurrences[_key == "${occurrenceKey}"].attendances`, [
-          attendanceData,
-        ])
-        .commit({ autoGenerateArrayKeys: true });
+      await tickAttendance({ gatheringId, occurrenceKey, memberId });
     } else {
-      sanityClient
-        .patch(gatheringId)
-        .unset([
-          `occurrences[_key=="${occurrenceKey}"].attendances[_key=="${attendanceKey}"]`,
-        ])
-        .commit();
+      await untickAttendance({ gatheringId, occurrenceKey, attendanceKey });
     }
+  };
+
+  const handleAddMember = async ({ memberId }) => {
+    setSaving(true);
+    await addMember({ memberId, gatheringId });
+    await tickAttendance({ gatheringId, occurrenceKey, memberId });
+    await loadGathering();
+    setSaving(false);
+    onClose();
+  };
+
+  const handleCreateMember = async ({ name, alias, email }) => {
+    setSaving(true);
+    const { _id: memberId } = await createMember({
+      name,
+      alias,
+      email,
+      organizationId: gathering.organization._ref,
+    });
+    await handleAddMember({ memberId });
+    setSaving(false);
+    onClose();
   };
 
   return (
@@ -121,7 +121,7 @@ export const Occurrence = () => {
                       );
                       const attendanceKey = attendance?._key;
                       handleCheckMember({
-                        memberId: memberId,
+                        memberId,
                         attendanceKey,
                       });
                     }}
@@ -142,11 +142,13 @@ export const Occurrence = () => {
           </Container>
         </Flex>
       </Stack>
-      <AddButton onClick={() => {
-        console.log("onClick")
-        onOpen()
-      }} />
-      <AddMemberModal {...{ isOpen, onClose }} />
+      <AddButton onClick={onOpen} />
+      <AddMemberModal
+        gatheringId={gathering._id}
+        onCreateMember={handleCreateMember}
+        onMemberSelect={handleAddMember}
+        {...{ isOpen, isSaving, onClose, occurrenceKey, members }}
+      />
     </>
   );
 };
