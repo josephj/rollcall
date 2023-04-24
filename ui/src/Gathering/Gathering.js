@@ -125,21 +125,22 @@ export const Gathering = () => {
                 </Heading>
                 <Stack space="5">
                   {occurrences.map(({ _key, date, attendances = [] }) => (
-                    <Link
+                    <Card
                       key={_key}
-                      to={date}
-                      style={{ textDecoration: "none" }}
+                      textAlign="center"
+                      minWidth="250px"
+                      onClick={() =>
+                        navigate(`/${org}/gatherings/${slug}/${date}`)
+                      }
                     >
-                      <Card key={_key} textAlign="center" minWidth="250px">
-                        <Text fontSize="13" fontWeight="500">
-                          {date}
-                        </Text>
-                        <Text fontSize="11">
-                          Attendances:{" "}
-                          <Text fontWeight="500">{attendances.length}</Text>
-                        </Text>
-                      </Card>
-                    </Link>
+                      <Text fontSize="13" fontWeight="500">
+                        {date}
+                      </Text>
+                      <Text fontSize="11">
+                        Attendances:{" "}
+                        <Text fontWeight="500">{attendances.length}</Text>
+                      </Text>
+                    </Card>
                   ))}
                 </Stack>
               </Stack>
