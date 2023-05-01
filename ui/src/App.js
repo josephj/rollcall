@@ -1,8 +1,9 @@
 import { gql, useQuery } from "@apollo/client";
+import { Flex, Stack, Text } from "native-base";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Container, Flex, Stack, Text } from "native-base";
 
-import { Card, Header } from "./components";
+import { Card, Layout } from "./components";
 
 const GET_GATHERING_LIST = gql`
   query {
@@ -18,40 +19,44 @@ const GET_GATHERING_LIST = gql`
 `;
 
 export const App = () => {
-  const { loading, error, data } = useQuery(GET_GATHERING_LIST);
-  const navigate = useNavigate()
+  const { loading: isLoading, data } = useQuery(GET_GATHERING_LIST);
+  const navigate = useNavigate();
+  const organizations = data?.allOrganization || [];
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
+  useEffect(() => {
+    const organizations = data?.allOrganization || [];
+    if (organizations.length === 1) {
+      const [{ slug }] = organizations;
+      navigate(`/${slug.current}/gatherings`, { replace: true });
+    }
+  }, [data, navigate]);
 
   const handleClick = (slug) => {
-    navigate(`/${slug}/gatherings`)
+    navigate(`/${slug}/gatherings`);
   };
 
+  const headerContent = (
+    <Text fontSize="lg" fontWeight="500">
+      Organizations
+    </Text>
+  );
+
   return (
-    <Flex flexDirection="column" height="100%">
-      <Header>
-        <Text fontSize="lg" fontWeight="500">
-          Organizations
-        </Text>
-      </Header>
-      <Flex
-        alignItems="center"
-        justifyContent="center"
-        background="coolGray.50"
-        flexGrow="1"
-      >
-        <Container>
-          <Stack space={5}>
-            {data.allOrganization.map(({ _id, slug, name }) => (
-              <Card textAlign="center" minWidth="250px" onClick={() => handleClick(slug.current)}>
-                <Text fontWeight="400">{name}</Text>
-              </Card>
-            ))}
-          </Stack>
-        </Container>
+    <Layout {...{ headerContent, isLoading }}>
+      <Flex height="100%" justifyContent="center">
+        <Stack space={5}>
+          {organizations.map(({ _id, slug, name }) => (
+            <Card
+              textAlign="center"
+              minWidth="250px"
+              onClick={() => handleClick(slug.current)}
+            >
+              <Text fontWeight="400">{name}</Text>
+            </Card>
+          ))}
+        </Stack>
       </Flex>
-    </Flex>
+    </Layout>
   );
 };
 

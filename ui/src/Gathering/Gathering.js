@@ -1,21 +1,12 @@
-import { useState, useEffect } from "react";
 import groq from "groq";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import {
-  Box,
-  Container,
-  Flex,
-  HStack,
-  Heading,
-  Stack,
-  Spinner,
-  Text,
-} from "native-base";
-import { rrulestr } from "rrule";
+import { HStack, Skeleton, Stack, Text } from "native-base";
 
-import { Card, Header } from "../components";
+import { Layout } from "../components";
 import { sanityClient } from "../sanityClient";
-import { getUpcomingDates } from "./utils";
+import { Info } from "./Info";
+import { List } from "./List";
 
 const query = groq`
   *[_type == "gathering" && slug.current == $slug][0] {
@@ -34,8 +25,7 @@ const query = groq`
 `;
 
 export const Gathering = () => {
-  const params = useParams();
-  const { org, slug } = params;
+  const { org, slug } = useParams();
   const [gathering, setGathering] = useState();
   const navigate = useNavigate();
 
@@ -51,27 +41,9 @@ export const Gathering = () => {
     loadGathering();
   }, [slug]);
 
-  if (!gathering) {
-    return (
-      <Flex paddingY={10}>
-        <HStack alignItems="center" space={2} justifyContent="center">
-          <Spinner />
-          <Heading color="primary.500" fontSize="md">
-            Loading
-          </Heading>
-        </HStack>
-      </Flex>
-    );
-  }
+  const { _id, title } = gathering || {};
 
-  const { _id, location, occurrences = [], recurrence, title } = gathering;
-  const rrule = rrulestr(recurrence);
-  const createdDates = occurrences.map(({ date }) => date);
-  const notCreatedDates = getUpcomingDates({ rrule }).filter(
-    (date) => !createdDates.includes(date)
-  );
-
-  const handleClickCreate = async (date) => {
+  const handleCreate = async (date) => {
     await sanityClient
       .patch(_id)
       .setIfMissing({ occurrences: [] })
@@ -81,73 +53,42 @@ export const Gathering = () => {
     navigate(`/${org}/gatherings/${slug}/${date}`);
   };
 
-  return (
-    <Stack flexDirection="column" height="100%" space={5}>
-      <Header>
+  const handleEdit = (date) => {
+    navigate(`/${org}/gatherings/${slug}/${date}`);
+  };
+
+  const renderHeaderContent = () => {
+    if (!title) {
+      return (
+        <HStack alignItems="center" space="3">
+          <Text fontSize="lg" fontWeight="500">
+            <Link to={`/${org}/gatherings`}>Gatherings</Link>
+          </Text>
+          <Text color="gray.300">&gt;</Text>
+          <Skeleton w="100" h="5" rounded="sm" my="1" endColor="gray.200" />
+        </HStack>
+      );
+    }
+
+    return (
+      <HStack alignItems="center" space="3">
         <Text fontSize="lg" fontWeight="500">
-          <Link to={`/${org}/gatherings`}>Gatherings</Link> &gt; {title}
+          <Link to={`/${org}/gatherings`}>Gatherings</Link>
         </Text>
-      </Header>
-      <Flex alignItems="center" justifyContent="flex-start" flexGrow="1">
-        <Container>
-          <Stack space={5}>
-            <Box alignSelf="center" textAlign="center">
-              <Text>{location}</Text>
-              <Text>{rrule.toText()}</Text>
-            </Box>
+        <Text color="gray.300">&gt;</Text>
+        <Text fontSize="lg" fontWeight="500">
+          {title}{" "}
+        </Text>
+      </HStack>
+    );
+  };
 
-            {notCreatedDates.length ? (
-              <Stack as="section" space="5">
-                <Heading size="sm" textAlign="center">
-                  Not Established
-                </Heading>
-                <Stack space="5">
-                  {notCreatedDates.map((date) => (
-                    <Card
-                      key={date}
-                      textAlign="center"
-                      minWidth="250px"
-                      onClick={() => handleClickCreate(date)}
-                    >
-                      <Text fontWeight="500">{date}</Text>
-                    </Card>
-                  ))}
-                </Stack>
-              </Stack>
-            ) : null}
-
-            <hr />
-
-            {createdDates.length ? (
-              <Stack space="5">
-                <Heading size="sm" textAlign="center">
-                  Established
-                </Heading>
-                <Stack space="5">
-                  {occurrences.map(({ _key, date, attendances = [] }) => (
-                    <Card
-                      key={_key}
-                      textAlign="center"
-                      minWidth="250px"
-                      onClick={() =>
-                        navigate(`/${org}/gatherings/${slug}/${date}`)
-                      }
-                    >
-                      <Text fontSize="13" fontWeight="500">
-                        {date}
-                      </Text>
-                      <Text fontSize="11">
-                        Attendances:{" "}
-                        <Text fontWeight="500">{attendances.length}</Text>
-                      </Text>
-                    </Card>
-                  ))}
-                </Stack>
-              </Stack>
-            ) : null}
-          </Stack>
-        </Container>
-      </Flex>
-    </Stack>
+  return (
+    <Layout headerContent={renderHeaderContent()} isLoading={!gathering}>
+      <Stack space={5}>
+        <Info {...{ gathering }} />
+        <List onCreate={handleCreate} onEdit={handleEdit} {...{ gathering }} />
+      </Stack>
+    </Layout>
   );
 };

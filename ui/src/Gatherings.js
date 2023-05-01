@@ -1,8 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
-import { Link, useParams, useNavigate } from "react-router-dom";
-import { Container, Flex, Stack, Text } from "native-base";
+import { useParams, useNavigate } from "react-router-dom";
+import { Stack, Text } from "native-base";
 
-import { Card, Header } from "./components";
+import { Card, Layout } from "./components";
 
 const GET_GATHERING_LIST = gql`
   query {
@@ -18,37 +18,31 @@ const GET_GATHERING_LIST = gql`
 `;
 
 export const Gatherings = () => {
-  const { loading, error, data } = useQuery(GET_GATHERING_LIST);
-
-  const navigate = useNavigate();
   const { org } = useParams();
+  const navigate = useNavigate();
+  const { loading, data } = useQuery(GET_GATHERING_LIST);
+  const gatherings = data?.allGathering || [];
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error :(</p>;
+  const headerContent = (
+    <Text fontSize="lg" fontWeight="500">
+      Gatherings
+    </Text>
+  );
 
   return (
-    <Stack flexDirection="column" height="100%" space={5}>
-      <Header marginBottom={10}>
-        <Text fontSize="lg" fontWeight="500">
-          Gatherings
-        </Text>
-      </Header>
-      <Flex alignItems="center" flexGrow="1" justifyContent="center">
-        <Container>
-          <Stack space={5}>
-            {data.allGathering.map(({ _id, title, name, slug }) => (
-              <Card
-                textAlign="center"
-                minWidth="250px"
-                onClick={() => navigate(`/${org}/gatherings/${slug.current}`)}
-              >
-                <Text fontWeight="500">{title}</Text>
-                <Text fontSize="11px">{name}</Text>
-              </Card>
-            ))}
-          </Stack>
-        </Container>
-      </Flex>
-    </Stack>
+    <Layout isLoading={loading} {...{ headerContent }}>
+      <Stack space={5}>
+        {gatherings.map(({ _id, title, name, slug }) => (
+          <Card
+            textAlign="center"
+            minWidth="250px"
+            onClick={() => navigate(`/${org}/gatherings/${slug.current}`)}
+          >
+            <Text fontWeight="500">{title}</Text>
+            <Text fontSize="11px">{name}</Text>
+          </Card>
+        ))}
+      </Stack>
+    </Layout>
   );
 };

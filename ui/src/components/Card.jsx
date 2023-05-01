@@ -6,27 +6,25 @@ export const Card = ({ children, ...rest }) => (
       return (
         <Box
           borderWidth="1"
-          borderColor="coolGray.300"
-          shadow="0.7"
+          borderColor="coolGray.200"
           bg={
             isPressed
               ? "coolGray.200"
               : isHovered
-              ? "coolGray.200"
-              : "coolGray.100"
+              ? "coolGray.100"
+              : "coolGray.50"
           }
           p="5"
-          rounded="5"
           style={{
-            height: 'auto',
+            height: "auto",
             transform: [
               {
                 scale: isPressed ? 0.96 : 1,
               },
             ],
-            'a:link, a:visited': {
-              textDecoration: 'none',
-            }
+            "a:link, a:visited": {
+              textDecoration: "none",
+            },
           }}
           {...rest}
         >

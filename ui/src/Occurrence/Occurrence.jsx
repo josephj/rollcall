@@ -1,19 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-import {
-  Box,
-  Container,
-  Checkbox,
-  Flex,
-  HStack,
-  Stack,
-  Text,
-  useDisclose,
-} from "native-base";
+import { Box, HStack, Stack, Skeleton, Text, useDisclose } from "native-base";
 
-import { Card, Header } from "../components";
+import { Layout } from "../components";
 import { AddMemberModal } from "./AddMemberModal";
+import { List } from "./List";
 import { AddButton } from "./Elements";
 import { useApi } from "./useApi";
 
@@ -46,31 +38,22 @@ export const Occurrence = () => {
     loadGathering();
   }, [date, fetchOccurrence, loadGathering, slug]);
 
-  if (!gathering) {
-    return;
-  }
-
-  const {
-    _id: gatheringId,
-    title,
-    occurrences,
-    members = [],
-  } = gathering || {};
-
-  const [{ attendances = [], _key: occurrenceKey }] = occurrences || [];
-
-  const memberIds = attendances.map(({ member }) => member?._ref);
-
-  const handleCheckMember = async ({ memberId, attendanceKey }) => {
+  const handleTickMember = async ({ memberId, attendanceKey }) => {
+    const { _id: gatheringId, occurrences } = gathering || {};
+    const [{ attendances = [], _key: occurrenceKey }] = occurrences || [];
+    const memberIds = attendances.map(({ member }) => member?._ref);
     const isAdding = !memberIds.includes(memberId);
     if (isAdding) {
       await tickAttendance({ gatheringId, occurrenceKey, memberId });
     } else {
       await untickAttendance({ gatheringId, occurrenceKey, attendanceKey });
     }
+    await loadGathering();
   };
 
   const handleAddMember = async ({ memberId }) => {
+    const { _id: gatheringId, occurrences } = gathering || {};
+    const [{ _key: occurrenceKey }] = occurrences || [];
     setSaving(true);
     await addMember({ memberId, gatheringId });
     await tickAttendance({ gatheringId, occurrenceKey, memberId });
@@ -92,59 +75,55 @@ export const Occurrence = () => {
     onClose();
   };
 
+  const renderHeaderContent = () => {
+    if (!gathering) {
+      return (
+        <HStack alignItems="center" space="3">
+          <Skeleton w="120" h="5" rounded="sm" my="1" endColor="gray.200" />
+          <Text color="gray.300">&gt;</Text>
+          <Skeleton w="120" h="5" rounded="sm" my="1" endColor="gray.200" />
+        </HStack>
+      );
+    }
+
+    const { title } = gathering;
+
+    return (
+      <HStack alignItems="center" space="3">
+        <Text fontSize="lg" fontWeight="500">
+          <Link to={`/${org}/gatherings/${slug}`}>{title}</Link>
+        </Text>
+        <Text color="gray.300">&gt;</Text>
+        <Text fontSize="lg" fontWeight="500">
+          {date}
+        </Text>
+      </HStack>
+    );
+  };
+
+  const members = gathering?.members || [];
+  const occurrence = gathering?.occurrences?.[0];
+  const occurrenceKey = occurrence?._key;
+  const attendances = occurrence?.attendances || [];
+
   return (
     <>
-      <Stack flexDirection="column" height="100%" space={5}>
-        <Header>
-          <Text fontSize="lg" fontWeight="500">
-            <Link to={`/${org}/gatherings/${slug}`}>
-              {title} ({slug})
-            </Link>{" "}
-            &gt; {date}
-          </Text>
-        </Header>
-        <Flex alignItems="center" justifyContent="flex-start" flexGrow="1">
-          <Container>
-            <Stack space={5}>
-              <Box alignSelf="center" textAlign="center">
-                <Text>Attendances: {attendances.length}</Text>
-              </Box>
-              <Stack space={5}>
-                {members.map(({ _id: memberId, name, alias }) => (
-                  <Card
-                    key={memberId}
-                    textAlign="center"
-                    minWidth="250px"
-                    onClick={() => {
-                      const attendance = attendances.find(
-                        ({ member }) => member._ref === memberId
-                      );
-                      const attendanceKey = attendance?._key;
-                      handleCheckMember({
-                        memberId,
-                        attendanceKey,
-                      });
-                    }}
-                  >
-                    <Checkbox
-                      defaultIsChecked={memberIds.includes(memberId)}
-                      value={memberId}
-                    >
-                      <HStack space="2">
-                        <Text fontWeight="500">{name}</Text>
-                        <Text size="xsmall">{alias}</Text>
-                      </HStack>
-                    </Checkbox>
-                  </Card>
-                ))}
-              </Stack>
-            </Stack>
-          </Container>
-        </Flex>
-      </Stack>
+      <Layout
+        headerContent={renderHeaderContent()}
+        isLoading={!gathering || isSaving}
+      >
+        <Stack space={5}>
+          {attendances.length ? (
+            <Box alignSelf="center" textAlign="center">
+              <Text>Attendances: {attendances.length}</Text>
+            </Box>
+          ) : null}
+          <List onTickMember={handleTickMember} {...{ gathering }} />
+        </Stack>
+      </Layout>
       <AddButton onClick={onOpen} />
       <AddMemberModal
-        gatheringId={gathering._id}
+        gatheringId={gathering?._id}
         onCreateMember={handleCreateMember}
         onMemberSelect={handleAddMember}
         {...{ isOpen, isSaving, onClose, occurrenceKey, members }}
