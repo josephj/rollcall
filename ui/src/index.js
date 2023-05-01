@@ -10,7 +10,7 @@ import reportWebVitals from "./reportWebVitals";
 import { Gatherings } from "./Gatherings";
 import { Gathering } from "./Gathering";
 import { Occurrence } from "./Occurrence";
-import { WeeklyStatistics } from "./WeeklyStatistics";
+import { WeeklyReport } from "./WeeklyReport";
 import "./index.css";
 
 export const client = new ApolloClient({
@@ -48,8 +48,8 @@ const router = createBrowserRouter([
     element: <Occurrence />,
   },
   {
-    path: "/:org/weekly-statistics",
-    element: <WeeklyStatistics />,
+    path: "/:org/weekly-report",
+    element: <WeeklyReport />,
   },
 ]);
 

@@ -12797,6 +12797,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mockdate@npm:^3.0.5":
+  version: 3.0.5
+  resolution: "mockdate@npm:3.0.5"
+  checksum: 72b66786d9e072379693f80bf9fb82eb5153c9741030a4294184e3ccaf952d0713fae8966f77780580cf902f8ec7ccc95577b0ad47980d255e2ffb71fc7ca49c
+  languageName: node
+  linkType: hard
+
 "module-alias@npm:^2.2.2":
   version: 2.2.2
   resolution: "module-alias@npm:2.2.2"
@@ -15649,6 +15656,7 @@ __metadata:
     dayjs: ^1.11.7
     graphql: ^16.6.0
     groq: ^3.5.0
+    mockdate: ^3.0.5
     native-base: ^3.4.26
     react: ^18.2.0
     react-app-rewired: ^2.2.1

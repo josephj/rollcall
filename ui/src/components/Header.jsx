@@ -52,9 +52,9 @@ export const Header = ({ children, ...otherProps }) => {
             <Button
               padding="0"
               variant="unstyled"
-              onPress={() => navigate(`/${org}/weekly-statistics`)}
+              onPress={() => navigate(`/${org}/weekly-report`)}
             >
-              Weekly Statistics
+              Weekly Report
             </Button>
           </Menu.Item>
         </Menu>
