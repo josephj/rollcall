@@ -72,13 +72,9 @@ export const Gathering = () => {
 
     return (
       <HStack alignItems="center" space="3">
-        <Text fontSize="lg" fontWeight="500">
-          <Link to={`/${org}/gatherings`}>Gatherings</Link>
-        </Text>
+        <Link to={`/${org}/gatherings`}>Gatherings</Link>
         <Text color="gray.300">&gt;</Text>
-        <Text fontSize="lg" fontWeight="500">
-          {title}{" "}
-        </Text>
+        <Text>{title}</Text>
       </HStack>
     );
   };

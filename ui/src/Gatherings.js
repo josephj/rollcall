@@ -30,7 +30,7 @@ export const Gatherings = () => {
   );
 
   return (
-    <Layout isLoading={loading} {...{ headerContent }}>
+    <Layout headerContent="Gatherings" isLoading={loading}>
       <Stack space={5}>
         {gatherings.map(({ _id, title, name, slug }) => (
           <Card
