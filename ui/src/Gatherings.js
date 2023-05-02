@@ -23,12 +23,6 @@ export const Gatherings = () => {
   const { loading, data } = useQuery(GET_GATHERING_LIST);
   const gatherings = data?.allGathering || [];
 
-  const headerContent = (
-    <Text fontSize="lg" fontWeight="500">
-      Gatherings
-    </Text>
-  );
-
   return (
     <Layout headerContent="Gatherings" isLoading={loading}>
       <Stack space={5}>

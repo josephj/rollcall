@@ -14,3 +14,13 @@ export const getReportStartEndDateTimes = () => {
 
   return { startDateTime, endDateTime };
 };
+
+export const mapGathering = ({ occurrences, ...rest }) => ({
+  total: occurrences?.reduce(
+    (result, { attendances }) => result + (attendances?.length || 0),
+    0
+  ),
+  occurrences:
+    occurrences?.filter(({ attendances }) => !!attendances?.length) || [],
+  ...rest,
+});

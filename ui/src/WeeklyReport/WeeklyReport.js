@@ -1,65 +1,25 @@
 import dayjs from "dayjs";
-import groq from "groq";
-import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { FlatList, HStack, Stack, Text } from "native-base";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import "dayjs/locale/en";
 
 import { Layout } from "../components";
-import { sanityClient } from "../sanityClient";
 import { getReportStartEndDateTimes } from "./utils";
+import { useApi } from "./useApi";
 
 dayjs.extend(localizedFormat);
 dayjs.locale("en");
 
-const query = groq`
-  *[_type == "gathering"] [] {  
-    _id,
-    title,
-    slug {
-      current
-    }, 
-    occurrences[date >= $startDate && date <= $endDate] {
-      date,
-      _key,
-      attendances[]
-    }
-  }
-`;
-
 export const WeeklyReport = () => {
   const { org } = useParams();
-  const [isLoading, setLoading] = useState(true);
-  const [gatherings, setGatherings] = useState([]);
   const { startDateTime, endDateTime } = getReportStartEndDateTimes();
   const startDate = startDateTime.format("YYYY-MM-DD");
   const endDate = endDateTime.format("YYYY-MM-DD");
-
-  useEffect(() => {
-    const loadGatherings = async () => {
-      setLoading(true);
-      try {
-        const rawData = await sanityClient.fetch(query, { startDate, endDate });
-        const data = rawData.map(({ occurrences, ...rest }) => ({
-          total: occurrences?.reduce(
-            (result, { attendances }) => result + (attendances?.length || 0),
-            0
-          ),
-          occurrences:
-            occurrences?.filter(({ attendances }) => !!attendances?.length) ||
-            [],
-          ...rest,
-        }));
-        setGatherings(data);
-      } catch (e) {
-        console.error(e.message);
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadGatherings();
-  }, [startDate, endDate]);
+  const { data: gatherings, isLoading } = useApi({
+    startDate,
+    endDate,
+  });
 
   return (
     <Layout headerContent="Weekly Report" {...{ isLoading }}>
