@@ -38,7 +38,7 @@ export const WeeklyReport = () => {
           <FlatList
             data={gatherings}
             renderItem={({ index, item }) => (
-              <HStack key={item._id} py="1" space="2">
+              <HStack py="1" space="2">
                 <Text textAlign="right" width="10">
                   {index + 1}.
                 </Text>

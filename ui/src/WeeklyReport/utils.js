@@ -16,10 +16,11 @@ export const getReportStartEndDateTimes = () => {
 };
 
 export const mapGathering = ({ occurrences, ...rest }) => ({
-  total: occurrences?.reduce(
-    (result, { attendances }) => result + (attendances?.length || 0),
-    0
-  ),
+  total:
+    occurrences?.reduce(
+      (result, { attendances }) => result + (attendances?.length || 0),
+      0
+    ) || 0,
   occurrences:
     occurrences?.filter(({ attendances }) => !!attendances?.length) || [],
   ...rest,
