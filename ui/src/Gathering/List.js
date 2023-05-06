@@ -8,7 +8,7 @@ export const List = ({ gathering, onCreate, onEdit }) => {
     return null;
   }
 
-  const { occurrences, recurrence } = gathering || {};
+  const { occurrences = [], recurrence } = gathering || {};
   const rrule = rrulestr(recurrence);
   const createdDates = occurrences.map(({ date }) => date);
   const notCreatedDates = getUpcomingDates({ rrule }).filter(
