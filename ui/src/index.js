@@ -24,6 +24,10 @@ const router = createBrowserRouter([
     element: <App />,
   },
   {
+    path: "/:org",
+    element: <Gatherings />,
+  },
+  {
     path: "/:org/gatherings",
     element: <Gatherings />,
   },
