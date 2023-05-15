@@ -8,7 +8,6 @@ import {
   HStack,
   Modal,
 } from "native-base";
-import { useDebouncedCallback } from "use-debounce";
 import CreatableSelect from "react-select/creatable";
 
 import { HookInput } from "../components";
@@ -26,7 +25,6 @@ export const AddMemberModal = ({
   onClose,
 }) => {
   const [options, setOptions] = useState([]);
-  const [keyword, setKeyword] = useState("");
   const [isLoading, setLoading] = useState(false);
   const [isCreating, setCreating] = useState(false);
   const { control, handleSubmit, reset, setValue } = useForm();
@@ -57,8 +55,6 @@ export const AddMemberModal = ({
     [gatheringId, gatheringMembers, occurrenceKey]
   );
 
-  const debounceFetchMembers = useDebouncedCallback(fetchMembers, 500);
-
   const handleAddMember = (value) => {
     onCreateMember(value);
   };
@@ -84,11 +80,6 @@ export const AddMemberModal = ({
     await fetchMembers();
   };
 
-  const handleInputChange = async (searchString) => {
-    setKeyword(searchString);
-    await debounceFetchMembers({ searchString });
-  };
-
   const customStyles = {
     control: (base) => ({
       ...base,
@@ -105,11 +96,9 @@ export const AddMemberModal = ({
           <Stack space={5}>
             <CreatableSelect
               isDisabled={isCreating}
-              inputValue={keyword}
               isClearable
               onCreateOption={handleCreateMember}
               onChange={handleMemberSelect}
-              onInputChange={handleInputChange}
               onMenuOpen={handleMenuOpen}
               styles={customStyles}
               {...{ options, isLoading }}
