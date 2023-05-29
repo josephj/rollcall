@@ -33,7 +33,32 @@ export const useApi = ({ date, slug }) => {
     [date, slug]
   );
 
+  const updateAttendances = useCallback(
+    async ({ gatheringId, occurrenceKey, attendanceMemberIds }) => {
+      const attendances = attendanceMemberIds.map((memberId) => ({
+        _type: "attendance",
+        member: {
+          _ref: memberId,
+          _type: "reference",
+        },
+      }));
+
+      return sanityClient
+        .patch(gatheringId)
+        .set({
+          [`occurrences[_key == "${occurrenceKey}"].attendances`]: attendances,
+        })
+        .commit({ autoGenerateArrayKeys: true });
+    },
+    []
+  );
+
   const tickAttendance = async ({ gatheringId, occurrenceKey, memberId }) => {
+    const { occurrences = [] } = await fetchOccurrence();
+    const { attendances = [] } = occurrences[0];
+    const isTicked = attendances.some(({ member }) => member._ref === memberId);
+    if (isTicked) return;
+
     const attendanceData = {
       _type: "attendance",
       member: {
@@ -54,13 +79,19 @@ export const useApi = ({ date, slug }) => {
     gatheringId,
     occurrenceKey,
     attendanceKey,
-  }) =>
-    sanityClient
+  }) => {
+    const { occurrences = [] } = await fetchOccurrence();
+    const { attendances = [] } = occurrences[0];
+    const isTicked = attendances.some(({ _key }) => _key === attendanceKey);
+    if (!isTicked) return;
+
+    return sanityClient
       .patch(gatheringId)
       .unset([
         `occurrences[_key=="${occurrenceKey}"].attendances[_key=="${attendanceKey}"]`,
       ])
       .commit();
+  };
 
   return {
     addMember,
@@ -68,5 +99,6 @@ export const useApi = ({ date, slug }) => {
     fetchOccurrence,
     tickAttendance,
     untickAttendance,
+    updateAttendances,
   };
 };

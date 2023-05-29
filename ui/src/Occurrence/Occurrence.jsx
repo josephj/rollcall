@@ -12,6 +12,7 @@ import { useApi } from "./useApi";
 export const Occurrence = () => {
   const { slug, date, org } = useParams();
   const [gathering, setGathering] = useState();
+  const [total, setTotal] = useState(0);
   const [isSaving, setSaving] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclose();
   const {
@@ -19,11 +20,21 @@ export const Occurrence = () => {
     createMember,
     fetchOccurrence,
     tickAttendance,
-    untickAttendance,
+    updateAttendances,
   } = useApi({
     date,
     slug,
   });
+
+  const members = gathering?.members || [];
+  const occurrence = gathering?.occurrences?.[0];
+  const occurrenceKey = occurrence?._key;
+  const attendances = occurrence?.attendances || [];
+  const attendancesTotal = attendances.length;
+
+  useEffect(() => {
+    setTotal(attendancesTotal);
+  }, [attendancesTotal]);
 
   const loadGathering = useCallback(async () => {
     try {
@@ -38,16 +49,15 @@ export const Occurrence = () => {
     loadGathering();
   }, [date, fetchOccurrence, loadGathering, slug]);
 
-  const handleTickMember = async ({ memberId, attendanceKey }) => {
+  const handleTickMember = async ({ attendanceMemberIds }) => {
     const { _id: gatheringId, occurrences } = gathering || {};
-    const [{ attendances = [], _key: occurrenceKey }] = occurrences || [];
-    const memberIds = attendances.map(({ member }) => member?._ref);
-    const isAdding = !memberIds.includes(memberId);
-    if (isAdding) {
-      await tickAttendance({ gatheringId, occurrenceKey, memberId });
-    } else {
-      await untickAttendance({ gatheringId, occurrenceKey, attendanceKey });
-    }
+    const [{ _key: occurrenceKey }] = occurrences || [];
+    setTotal(attendanceMemberIds.length);
+    await updateAttendances({
+      gatheringId,
+      occurrenceKey,
+      attendanceMemberIds,
+    });
     await loadGathering();
   };
 
@@ -97,11 +107,6 @@ export const Occurrence = () => {
     );
   };
 
-  const members = gathering?.members || [];
-  const occurrence = gathering?.occurrences?.[0];
-  const occurrenceKey = occurrence?._key;
-  const attendances = occurrence?.attendances || [];
-
   return (
     <>
       <Layout
@@ -109,12 +114,14 @@ export const Occurrence = () => {
         isLoading={!gathering || isSaving}
       >
         <Stack space={5}>
-          {attendances.length ? (
-            <Box alignSelf="center" textAlign="center">
-              <Text>Attendances: {attendances.length}</Text>
-            </Box>
-          ) : null}
-          <List onTickMember={handleTickMember} {...{ gathering }} />
+          <Box alignSelf="center" textAlign="center">
+            <Text>Attendances: {total}</Text>
+          </Box>
+          <List
+            onCreateOccurrence={handleCreateOccurrence}
+            onTickMember={handleTickMember}
+            {...{ date, gathering, isSaving }}
+          />
         </Stack>
       </Layout>
       <AddButton onClick={onOpen} />
