@@ -1535,6 +1535,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.21.0":
+  version: 7.22.6
+  resolution: "@babel/runtime@npm:7.22.6"
+  dependencies:
+    regenerator-runtime: ^0.13.11
+  checksum: e585338287c4514a713babf4fdb8fc2a67adcebab3e7723a739fc62c79cfda875b314c90fd25f827afb150d781af97bc16c85bfdbfa2889f06053879a1ddb597
+  languageName: node
+  linkType: hard
+
 "@babel/template@npm:^7.18.10, @babel/template@npm:^7.20.7, @babel/template@npm:^7.3.3":
   version: 7.20.7
   resolution: "@babel/template@npm:7.20.7"
@@ -7842,6 +7851,15 @@ __metadata:
   version: 2.29.3
   resolution: "date-fns@npm:2.29.3"
   checksum: e01cf5b62af04e05dfff921bb9c9933310ed0e1ae9a81eb8653452e64dc841acf7f6e01e1a5ae5644d0337e9a7f936175fd2cb6819dc122fdd9c5e86c56be484
+  languageName: node
+  linkType: hard
+
+"date-fns@npm:^2.30.0":
+  version: 2.30.0
+  resolution: "date-fns@npm:2.30.0"
+  dependencies:
+    "@babel/runtime": ^7.21.0
+  checksum: f7be01523282e9bb06c0cd2693d34f245247a29098527d4420628966a2d9aad154bd0e90a6b1cf66d37adcb769cd108cf8a7bd49d76db0fb119af5cdd13644f4
   languageName: node
   linkType: hard
 
@@ -14893,6 +14911,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-day-picker@npm:^8.8.0":
+  version: 8.8.0
+  resolution: "react-day-picker@npm:8.8.0"
+  peerDependencies:
+    date-fns: ^2.28.0
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: c104b4ae44bad44183f6a273327aa1d00d23afe6f3860f8335eea2d06c0f64ea015ea7438655c79a5024a8db259ba5fa9431dbf92f03889120d0c2c00a28117f
+  languageName: node
+  linkType: hard
+
 "react-dev-utils@npm:^12.0.1":
   version: 12.0.1
   resolution: "react-dev-utils@npm:12.0.1"
@@ -15653,6 +15681,7 @@ __metadata:
     "@testing-library/react": ^13.4.0
     "@testing-library/user-event": ^13.5.0
     customize-cra: ^1.0.0
+    date-fns: ^2.30.0
     dayjs: ^1.11.7
     graphql: ^16.6.0
     groq: ^3.5.0
@@ -15660,6 +15689,7 @@ __metadata:
     native-base: ^3.4.26
     react: ^18.2.0
     react-app-rewired: ^2.2.1
+    react-day-picker: ^8.8.0
     react-dom: ^18.2.0
     react-hook-form: ^7.43.9
     react-native-safe-area-context: 3.3.2

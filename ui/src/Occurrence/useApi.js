@@ -2,6 +2,7 @@ import { useCallback } from "react";
 
 import { sanityClient } from "../sanityClient";
 import { occurrenceQuery } from "./query.occurrence";
+import groq from "groq";
 
 export const useApi = ({ date, slug }) => {
   const addMember = useCallback(({ memberId, gatheringId }) => {
@@ -93,6 +94,27 @@ export const useApi = ({ date, slug }) => {
       .commit();
   };
 
+  const updateDate = async ({ gatheringId, prevDate, nextDate }) => {
+    const query = groq` *[_type == "gathering" && slug.current == $slug][0] { occurrences }`;
+    const { occurrences } = await sanityClient.fetch(query, {
+      slug,
+    });
+
+    const currentOccurrence = occurrences.find(({ date }) => date === prevDate);
+    const dates = occurrences.map(({ date }) => date);
+    const isDuplicate = dates.includes(nextDate);
+    if (isDuplicate) {
+      return;
+    }
+
+    return sanityClient
+      .patch(gatheringId)
+      .set({
+        [`occurrences[_key == "${currentOccurrence._key}"].date`]: nextDate,
+      })
+      .commit();
+  };
+
   return {
     addMember,
     createMember,
@@ -100,5 +122,6 @@ export const useApi = ({ date, slug }) => {
     tickAttendance,
     untickAttendance,
     updateAttendances,
+    updateDate,
   };
 };

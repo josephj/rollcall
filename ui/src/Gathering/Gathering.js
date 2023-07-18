@@ -1,12 +1,21 @@
 import groq from "groq";
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { HStack, Skeleton, Stack, Text } from "native-base";
+import {
+  AddIcon,
+  Fab,
+  HStack,
+  Skeleton,
+  Stack,
+  Text,
+  useDisclose,
+} from "native-base";
 
 import { Layout } from "../components";
 import { sanityClient } from "../sanityClient";
 import { Info } from "./Info";
 import { List } from "./List";
+import { AddModal } from "./AddModal";
 
 const query = groq`
   *[_type == "gathering" && slug.current == $slug][0] {
@@ -28,6 +37,7 @@ export const Gathering = () => {
   const { org, slug } = useParams();
   const [gathering, setGathering] = useState();
   const navigate = useNavigate();
+  const { isOpen, onOpen, onClose } = useDisclose();
 
   useEffect(() => {
     const loadGathering = async () => {
@@ -80,11 +90,26 @@ export const Gathering = () => {
   };
 
   return (
-    <Layout headerContent={renderHeaderContent()} isLoading={!gathering}>
-      <Stack space={5}>
-        <Info {...{ gathering }} />
-        <List onCreate={handleCreate} onEdit={handleEdit} {...{ gathering }} />
-      </Stack>
-    </Layout>
+    <>
+      <Layout headerContent={renderHeaderContent()} isLoading={!gathering}>
+        <Stack space={5}>
+          <Info {...{ gathering }} />
+          <List
+            onCreate={handleCreate}
+            onEdit={handleEdit}
+            {...{ gathering }}
+          />
+        </Stack>
+        <Fab
+          colorScheme="blue"
+          renderInPortal={false}
+          onPress={onOpen}
+          shadow={2}
+          size="sm"
+          icon={<AddIcon name="plus" size="sm" />}
+        />
+      </Layout>
+      <AddModal {...{ isOpen, onClose, slug }} />
+    </>
   );
 };

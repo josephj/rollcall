@@ -52,6 +52,14 @@ const router = createBrowserRouter([
     element: <Occurrence />,
   },
   {
+    path: "/:org/gatherings/:slug/:date/:action",
+    element: <Occurrence />,
+  },
+  {
+    path: "/organization/:org/gatherings/:slug/:date/:action",
+    element: <Occurrence />,
+  },
+  {
     path: "/:org/weekly-report",
     element: <WeeklyReport />,
   },

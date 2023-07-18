@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 import { Box, HStack, Stack, Skeleton, Text, useDisclose } from "native-base";
 
@@ -8,9 +8,12 @@ import { AddMemberModal } from "./AddMemberModal";
 import { List } from "./List";
 import { AddButton } from "./Elements";
 import { useApi } from "./useApi";
+import { sanityClient } from "../sanityClient";
+import { EditModal } from "./EditModal/";
 
 export const Occurrence = () => {
-  const { slug, date, org } = useParams();
+  const { slug, date, org, action } = useParams();
+  const navigate = useNavigate();
   const [gathering, setGathering] = useState();
   const [total, setTotal] = useState(0);
   const [isSaving, setSaving] = useState(false);
@@ -21,6 +24,7 @@ export const Occurrence = () => {
     fetchOccurrence,
     tickAttendance,
     updateAttendances,
+    updateDate,
   } = useApi({
     date,
     slug,
@@ -85,6 +89,15 @@ export const Occurrence = () => {
     onClose();
   };
 
+  const handleCreateOccurrence = async () => {
+    const { _id: gatheringId } = gathering || {};
+    return sanityClient
+      .patch(gatheringId)
+      .setIfMissing({ occurrences: [] })
+      .append("occurrences", [{ date, attendances: [], _type: "occurrence" }])
+      .commit({ autoGenerateArrayKeys: true });
+  };
+
   const renderHeaderContent = () => {
     if (!gathering) {
       return (
@@ -103,6 +116,9 @@ export const Occurrence = () => {
         <Link to={`/${org}/gatherings/${slug}`}>{title}</Link>
         <Text color="gray.300">&gt;</Text>
         <Text>{date}</Text>
+        <Text fontSize="sm">
+          (<Link to={`/${org}/gatherings/${slug}/${date}/edit`}>Edit</Link>)
+        </Text>
       </HStack>
     );
   };
@@ -130,6 +146,19 @@ export const Occurrence = () => {
         onCreateMember={handleCreateMember}
         onMemberSelect={handleAddMember}
         {...{ isOpen, isSaving, onClose, occurrenceKey, members }}
+      />
+      <EditModal
+        isOpen={action === "edit"}
+        onSave={async (selectedDate) => {
+          await updateDate({
+            gatheringId: gathering?._id,
+            prevDate: date,
+            nextDate: selectedDate,
+          });
+          navigate(`/${org}/gatherings/${slug}/${selectedDate}`);
+        }}
+        onClose={() => navigate(`/${org}/gatherings/${slug}/${date}`)}
+        {...{ date, slug }}
       />
     </>
   );

@@ -15,3 +15,9 @@ export const occurrenceQuery = groq`
     }
   }
 `;
+
+export const occurrencesQuery = groq`
+  *[_type == "gathering" && slug.current == $slug][0] {
+    occurrences,
+  }
+`;
