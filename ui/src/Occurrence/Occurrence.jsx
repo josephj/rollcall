@@ -24,7 +24,7 @@ export const Occurrence = () => {
     fetchOccurrence,
     tickAttendance,
     updateAttendances,
-    updateDate,
+    updateOccurrence,
   } = useApi({
     date,
     slug,
@@ -98,6 +98,17 @@ export const Occurrence = () => {
       .commit({ autoGenerateArrayKeys: true });
   };
 
+  const handleUpdate = async ({ selectedDate, hostMemberId }) => {
+    await updateOccurrence({
+      gatheringId: gathering?._id,
+      prevDate: date,
+      nextDate: selectedDate,
+      hostMemberId,
+    });
+
+    navigate(`/${org}/gatherings/${slug}/${selectedDate}`);
+  };
+
   const renderHeaderContent = () => {
     if (!gathering) {
       return (
@@ -149,14 +160,7 @@ export const Occurrence = () => {
       />
       <EditModal
         isOpen={action === "edit"}
-        onSave={async (selectedDate) => {
-          await updateDate({
-            gatheringId: gathering?._id,
-            prevDate: date,
-            nextDate: selectedDate,
-          });
-          navigate(`/${org}/gatherings/${slug}/${selectedDate}`);
-        }}
+        onSave={handleUpdate}
         onClose={() => navigate(`/${org}/gatherings/${slug}/${date}`)}
         {...{ date, slug }}
       />

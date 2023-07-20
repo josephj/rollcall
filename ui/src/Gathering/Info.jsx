@@ -1,4 +1,4 @@
-import { Box, Text } from "native-base";
+import { Center, Text, VStack } from "native-base";
 import { rrulestr } from "rrule";
 
 export const Info = ({ gathering }) => {
@@ -6,13 +6,20 @@ export const Info = ({ gathering }) => {
     return null;
   }
 
-  const { recurrence, location } = gathering;
+  const { recurrence, location, leader } = gathering;
   const rrule = rrulestr(recurrence);
 
   return (
-    <Box alignSelf="center" textAlign="center">
-      <Text>{location}</Text>
-      <Text>{rrule.toText()}</Text>
-    </Box>
+    <Center>
+      <VStack>
+        {location ? <Text>Location: {location}</Text> : null}
+        {rrule.toText() ? <Text>Time: {rrule.toText()}</Text> : null}
+        {leader ? (
+          <Text>
+            Leader: {leader.name} ({leader.alias})
+          </Text>
+        ) : null}
+      </VStack>
+    </Center>
   );
 };

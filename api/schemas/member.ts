@@ -1,4 +1,4 @@
-import type { Rule as RuleType } from '@sanity/types';
+import type {Rule as RuleType} from '@sanity/types'
 
 export const member = {
   name: 'member',
@@ -27,14 +27,14 @@ export const member = {
       name: 'organization',
       title: 'Organization',
       type: 'reference',
-      to: [{ type: 'organization' }],
+      to: [{type: 'organization'}],
       validation: (Rule: RuleType) => Rule.required(),
     },
     {
       name: 'gatherings',
       title: 'Gatherings',
       type: 'array',
-      of: [{ type: 'reference', to: [{ type: 'gathering' }] }],
+      of: [{type: 'reference', to: [{type: 'gathering'}]}],
     },
   ],
   preview: {
@@ -45,8 +45,8 @@ export const member = {
     prepare: ({name, alias}) => {
       return {
         title: name,
-        subtitle: alias
+        subtitle: alias,
       }
     },
   },
-};
+}

@@ -12,6 +12,12 @@ export const occurrence = {
       validation: (Rule: RuleType) => Rule.required(),
     },
     {
+      name: 'host',
+      title: 'Occurrence host',
+      type: 'reference',
+      to: [{type: 'member'}],
+    },
+    {
       name: 'attendances',
       title: 'Attendances',
       type: 'array',

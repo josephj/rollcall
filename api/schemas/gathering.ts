@@ -30,6 +30,12 @@ export const gathering = {
       validation: (Rule: RuleType) => Rule.required(),
     },
     {
+      name: 'leader',
+      title: 'Group leader',
+      type: 'reference',
+      to: [{type: 'member'}],
+    },
+    {
       name: 'location',
       title: 'Location',
       placeholder: 'Location (e.g. 線上)',
@@ -53,6 +59,7 @@ export const gathering = {
       type: 'array',
       of: [{type: 'occurrence'}],
     },
+
     {
       name: 'slug',
       type: 'slug',

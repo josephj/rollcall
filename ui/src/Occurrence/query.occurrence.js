@@ -6,9 +6,19 @@ export const occurrenceQuery = groq`
     _id,
     title,
     location,
-    occurrences[date == $date],
+    leader->{
+      _id,
+    },
+    occurrences[date == $date] {
+      _key,
+      date,
+      host->{
+        _id
+      },
+      attendances,
+    },
     organization,
-    "members": *[_type == "member" && references(^._id)] | order(name) {
+    "members": *[_type == "member" && references(^._id)] | order(leader) {
       _id,
       name,
       alias,

@@ -12,6 +12,12 @@ export const attendance = {
       name: 'note',
       type: 'string',
     },
+    {
+      name: 'isHost',
+      title: 'Hosting',
+      type: 'boolean',
+      description: 'Check this if the attendance is a host for a particular occurrence.',
+    },
   ],
   preview: {
     select: {

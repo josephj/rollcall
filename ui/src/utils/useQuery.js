@@ -16,7 +16,7 @@ export const useQuery = (query, params) => {
       setLoading(true);
       try {
         const response = await sanityClient.fetch(
-          groq(query),
+          groq([query]),
           paramsRef.current
         );
         setData(response);

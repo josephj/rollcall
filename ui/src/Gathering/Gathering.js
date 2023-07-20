@@ -22,6 +22,10 @@ const query = groq`
     _key,
     _id,
     title,
+    leader->{
+      name,
+      alias,
+    },
     location,
     occurrences[],
     recurrence,

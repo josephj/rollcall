@@ -94,23 +94,39 @@ export const useApi = ({ date, slug }) => {
       .commit();
   };
 
-  const updateDate = async ({ gatheringId, prevDate, nextDate }) => {
+  const updateOccurrence = async ({
+    gatheringId,
+    prevDate,
+    nextDate,
+    hostMemberId,
+  }) => {
     const query = groq` *[_type == "gathering" && slug.current == $slug][0] { occurrences }`;
     const { occurrences } = await sanityClient.fetch(query, {
       slug,
     });
 
     const currentOccurrence = occurrences.find(({ date }) => date === prevDate);
+    const currentOccurrenceKey = currentOccurrence._key;
     const dates = occurrences.map(({ date }) => date);
-    const isDuplicate = dates.includes(nextDate);
-    if (isDuplicate) {
-      return;
+    const isValid = !dates.includes(nextDate);
+    if (isValid) {
+      await sanityClient
+        .patch(gatheringId)
+        .set({
+          [`occurrences[_key == "${currentOccurrenceKey}"].date`]: nextDate,
+        })
+        .commit();
     }
 
-    return sanityClient
+    console.log("=>(useApi.js:130) hostMemberId", hostMemberId);
+
+    await sanityClient
       .patch(gatheringId)
       .set({
-        [`occurrences[_key == "${currentOccurrence._key}"].date`]: nextDate,
+        [`occurrences[_key == "${currentOccurrenceKey}"].host`]: {
+          _type: "reference",
+          _ref: hostMemberId,
+        },
       })
       .commit();
   };
@@ -122,6 +138,6 @@ export const useApi = ({ date, slug }) => {
     tickAttendance,
     untickAttendance,
     updateAttendances,
-    updateDate,
+    updateOccurrence,
   };
 };

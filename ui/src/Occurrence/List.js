@@ -1,5 +1,13 @@
 import { useState, useEffect } from "react";
-import { Button, Box, Checkbox, HStack, Stack, Text } from "native-base";
+import {
+  Button,
+  Box,
+  Checkbox,
+  HStack,
+  Stack,
+  Text,
+  VStack,
+} from "native-base";
 
 import { Card } from "../components";
 
@@ -56,21 +64,32 @@ export const List = ({ date, gathering, onCreateOccurrence, onTickMember }) => {
   return (
     <Checkbox.Group value={groupValue}>
       <Stack space={5}>
-        {members.map(({ _id: memberId, name, alias }) => (
-          <Card
-            key={memberId}
-            textAlign="center"
-            minWidth="250px"
-            onClick={() => handleClickCard(memberId)}
-          >
-            <Checkbox value={memberId}>
-              <HStack space="2">
-                <Text fontWeight="500">{name}</Text>
-                <Text size="xsmall">{alias}</Text>
-              </HStack>
-            </Checkbox>
-          </Card>
-        ))}
+        {members.map(({ _id: memberId, name, alias }) => {
+          const isLeader = gathering?.leader?._id === memberId;
+          const hostMemberId = occurrences[0]?.host?._id;
+          const isHost = hostMemberId === memberId;
+          return (
+            <Card
+              key={memberId}
+              textAlign="center"
+              minWidth="250px"
+              onClick={() => handleClickCard(memberId)}
+            >
+              <Checkbox value={memberId}>
+                <VStack space="0" textAlign="left">
+                  <HStack space="2">
+                    <Text fontWeight="500">{name}</Text>
+                    <Text size="xsmall">{alias}</Text>
+                  </HStack>
+                  {isLeader && (
+                    <Text fontSize="11px">⭐️ Gathering leader</Text>
+                  )}
+                  {isHost && <Text fontSize="11px">🎙️ Occurrence host</Text>}
+                </VStack>
+              </Checkbox>
+            </Card>
+          );
+        })}
       </Stack>
     </Checkbox.Group>
   );

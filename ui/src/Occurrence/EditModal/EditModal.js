@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Select from "react-select";
 import { DayPicker } from "react-day-picker";
 import { format, parse } from "date-fns";
-import { Button, Stack, HStack, Modal } from "native-base";
+import { Button, Center, Stack, HStack, Modal, FormControl } from "native-base";
 
 import "react-day-picker/dist/style.css";
 import "./style.css";
@@ -10,19 +11,28 @@ import { useApi } from "./useApi";
 const DATE_FORMAT = "yyyy-MM-dd";
 
 export const EditModal = ({ date, slug, isOpen = true, onClose, onSave }) => {
-  const { usedDateStrings, isLoading } = useApi({ slug });
+  const { usedDateStrings, members, hostMemberId, isLoading } = useApi({
+    date,
+    slug,
+  });
   const [isSaving, setSaving] = useState(false);
   const initialDate = parse(date, DATE_FORMAT, new Date());
   const defaultMonth = initialDate;
   const [selectedDay, setSelectedDay] = useState(initialDate);
+  const [selectedHostMemberId, setSelectedHostMemberId] =
+    useState(hostMemberId);
+
+  useEffect(() => {
+    setSelectedHostMemberId(hostMemberId);
+  }, [hostMemberId]);
 
   const handleSave = async () => {
     setSaving(true);
-    const selectedDateString = format(selectedDay, DATE_FORMAT);
-    if (date === selectedDateString) {
+    const selectedDate = format(selectedDay, DATE_FORMAT);
+    if (date === selectedDate) {
       onClose();
     }
-    await onSave(selectedDateString);
+    await onSave({ selectedDate, hostMemberId: selectedHostMemberId });
     setSaving(false);
   };
 
@@ -30,6 +40,10 @@ export const EditModal = ({ date, slug, isOpen = true, onClose, onSave }) => {
     if (!isSaving) {
       onClose();
     }
+  };
+
+  const handleChangeHost = ({ value }) => {
+    setSelectedHostMemberId(value);
   };
 
   if (isLoading) {
@@ -40,21 +54,47 @@ export const EditModal = ({ date, slug, isOpen = true, onClose, onSave }) => {
     .filter((usedDateString) => date !== usedDateString)
     .map((usedDateString) => parse(usedDateString, DATE_FORMAT, new Date()));
 
+  const options = members.map(({ _id, name, alias }) => ({
+    label: alias ? `${name} (${alias})` : name,
+    value: _id,
+  }));
+
+  const value = options.find(({ value }) => value === selectedHostMemberId);
+
   return (
     <Modal size="md" onClose={handleClose} {...{ isOpen }}>
       <Modal.Content>
         <Modal.CloseButton />
-        <Modal.Header>Choose date</Modal.Header>
+        <Modal.Header>Edit occurrence</Modal.Header>
         <Modal.Body>
-          <Stack space={5}>
-            <DayPicker
-              mode="single"
-              disabled={disabledDays}
-              selected={selectedDay}
-              onSelect={setSelectedDay}
-              {...{ defaultMonth }}
-            />
-          </Stack>
+          <Center>
+            <Stack space="md">
+              <FormControl isRequired>
+                <FormControl.Label>Date</FormControl.Label>
+                <DayPicker
+                  mode="single"
+                  disabled={disabledDays}
+                  selected={selectedDay}
+                  onSelect={setSelectedDay}
+                  {...{ defaultMonth }}
+                />
+                <FormControl.HelperText>
+                  Select any dates that are not already used.
+                </FormControl.HelperText>
+              </FormControl>
+              <FormControl>
+                <FormControl.Label>Host</FormControl.Label>
+                <Select
+                  isClearable
+                  onChange={handleChangeHost}
+                  {...{ options, value, isLoading }}
+                />
+                <FormControl.HelperText>
+                  Select the host for this occurrence.
+                </FormControl.HelperText>
+              </FormControl>
+            </Stack>
+          </Center>
         </Modal.Body>
         <Modal.Footer>
           <HStack space="sm">
