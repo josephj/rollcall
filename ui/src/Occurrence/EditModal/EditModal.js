@@ -83,7 +83,7 @@ export const EditModal = ({ date, slug, isOpen = true, onClose, onSave }) => {
                 </FormControl.HelperText>
               </FormControl>
               <FormControl>
-                <FormControl.Label>Host</FormControl.Label>
+                <FormControl.Label>Occurrence host</FormControl.Label>
                 <Select
                   isClearable
                   onChange={handleChangeHost}

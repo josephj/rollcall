@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Badge, Button, Box, Checkbox, HStack, Stack, Text } from "native-base";
 
 import { Card } from "../components";
+import { AttendanceMenu } from "./AttendanceMenu";
 
 export const List = ({ date, gathering, onCreateOccurrence, onTickMember }) => {
   const { members = [], occurrences = [] } = gathering || {};
@@ -72,47 +73,61 @@ export const List = ({ date, gathering, onCreateOccurrence, onTickMember }) => {
           const isHost = hostMemberId === memberId;
           const isMember = members.some(({ _id }) => _id === memberId);
           return (
-            <Card
-              key={memberId}
-              minWidth="250px"
-              textAlign="center"
-              onClick={() => handleClickCard(memberId)}
-            >
-              <Checkbox size="lg" value={memberId}>
-                <Stack space="2xs" textAlign="left">
-                  <HStack space="2">
-                    <Text fontWeight="500">{name}</Text>
-                    <Text size="xsmall">{alias}</Text>
-                  </HStack>
-                  <Stack space="xs">
-                    {isLeader && (
-                      <Badge
-                        colorScheme="warning"
-                        fontSize="11px"
-                        width="110px"
-                      >
-                        <Text fontSize="11px">⭐️ Gathering leader</Text>
-                      </Badge>
-                    )}
-                    {isHost && (
-                      <Badge colorScheme="warning" fontSize="11px" width="70px">
-                        <Text fontSize="11px">🎤 Occurrence host</Text>
-                      </Badge>
-                    )}
-                    {!isLeader && isMember && (
-                      <Badge colorScheme="info" fontSize="11px" width="70px">
-                        <Text fontSize="11px">👤 Member</Text>
-                      </Badge>
-                    )}
-                    {!isMember && (
-                      <Badge colorScheme="success" fontSize="11px" width="70px">
-                        <Text fontSize="11px">👋 Visitor</Text>
-                      </Badge>
-                    )}
+            <HStack alignItems="center" key={memberId} space="sm">
+              <Card
+                minWidth="250px"
+                textAlign="center"
+                onClick={() => handleClickCard(memberId)}
+              >
+                <Checkbox size="lg" value={memberId}>
+                  <Stack space="2xs" textAlign="left">
+                    <HStack space="2">
+                      <Text fontWeight="500">{name}</Text>
+                      <Text size="xsmall">{alias}</Text>
+                    </HStack>
+                    <Stack space="xs">
+                      {isLeader && (
+                        <Badge
+                          colorScheme="warning"
+                          fontSize="11px"
+                          width="110px"
+                        >
+                          <Text fontSize="11px">⭐️ Gathering leader</Text>
+                        </Badge>
+                      )}
+                      {isHost && (
+                        <Badge
+                          colorScheme="warning"
+                          fontSize="11px"
+                          width="70px"
+                        >
+                          <Text fontSize="11px">🎤 Occurrence host</Text>
+                        </Badge>
+                      )}
+                      {!isLeader && isMember && (
+                        <Badge colorScheme="info" fontSize="11px" width="70px">
+                          <Text fontSize="11px">👤 Member</Text>
+                        </Badge>
+                      )}
+                      {!isMember && (
+                        <Badge
+                          colorScheme="success"
+                          fontSize="11px"
+                          width="70px"
+                        >
+                          <Text fontSize="11px">👋 Visitor</Text>
+                        </Badge>
+                      )}
+                    </Stack>
                   </Stack>
-                </Stack>
-              </Checkbox>
-            </Card>
+                </Checkbox>
+              </Card>
+              <AttendanceMenu
+                gatheringId={gathering?._id}
+                occurrenceKey={occurrences[0]?._key}
+                {...{ memberId, isMember, isLeader, isHost }}
+              />
+            </HStack>
           );
         })}
       </Stack>
