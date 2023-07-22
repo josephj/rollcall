@@ -1,7 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
-import { Box, HStack, Stack, Skeleton, Text, useDisclose } from "native-base";
+import {
+  Box,
+  Divider,
+  HStack,
+  Stack,
+  Skeleton,
+  Text,
+  useDisclose,
+  Heading,
+  Center,
+} from "native-base";
 
 import { Layout } from "../components";
 import { AddMemberModal } from "./AddMemberModal";
@@ -152,6 +162,16 @@ export const Occurrence = () => {
             onTickMember={handleTickMember}
             {...{ date, gathering, isSaving }}
           />
+          <Divider />
+          <Center>
+            <Heading size="sm">Next Occurrence</Heading>
+            <Box fontSize="12px">
+              <ul>
+                <li>Date: DD/MM/YYYY</li>
+                <li>Host: Hello World</li>
+              </ul>
+            </Box>
+          </Center>
         </Stack>
       </Layout>
       <AddButton onClick={onOpen} />
