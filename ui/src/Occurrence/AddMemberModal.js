@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Button,
+  Checkbox,
   Divider,
   FormControl,
   Stack,
@@ -21,12 +22,13 @@ export const AddMemberModal = ({
   isOpen = true,
   isSaving = false,
   onCreateMember,
-  onMemberSelect,
+  onSelectMember,
   onClose,
 }) => {
   const [options, setOptions] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [isCreating, setCreating] = useState(false);
+  const [isGatheringMember, setGatheringMember] = useState(false);
   const { control, handleSubmit, reset, setValue } = useForm();
 
   useEffect(() => {
@@ -55,8 +57,8 @@ export const AddMemberModal = ({
     [gatheringId, gatheringMembers, occurrenceKey]
   );
 
-  const handleAddMember = (value) => {
-    onCreateMember(value);
+  const handleAddMember = (data) => {
+    onCreateMember({ data, isGatheringMember });
   };
 
   const handleClose = () => {
@@ -65,9 +67,8 @@ export const AddMemberModal = ({
     reset();
   };
 
-  const handleMemberSelect = async ({ value: memberId }) => {
-    onMemberSelect({ memberId });
-    onClose();
+  const handleSelectMember = async ({ value: memberId }) => {
+    onSelectMember({ memberId, isGatheringMember });
   };
 
   const handleCreateMember = async (name) => {
@@ -91,18 +92,42 @@ export const AddMemberModal = ({
     <Modal isOpen size="md" {...{ isOpen, onClose }}>
       <Modal.Content>
         <Modal.CloseButton />
-        <Modal.Header>Add new member</Modal.Header>
+        <Modal.Header>Add new attendee</Modal.Header>
         <Modal.Body minHeight="450px">
           <Stack space={5}>
-            <CreatableSelect
-              isDisabled={isCreating}
-              isClearable
-              onCreateOption={handleCreateMember}
-              onChange={handleMemberSelect}
-              onMenuOpen={handleMenuOpen}
-              styles={customStyles}
-              {...{ options, isLoading }}
-            />
+            <FormControl>
+              <HStack space="xs" alignItems="center">
+                <Checkbox
+                  isChecked={isGatheringMember}
+                  onChange={setGatheringMember}
+                  value={true}
+                />
+                <FormControl.Label
+                  margin="0"
+                  onClick={() => setGatheringMember(!isGatheringMember)}
+                >
+                  Member
+                </FormControl.Label>
+                <FormControl.HelperText margin="0">
+                  Save the attendee as gathering member
+                </FormControl.HelperText>
+              </HStack>
+            </FormControl>
+            <FormControl isRequired>
+              <FormControl.Label>Attendee:</FormControl.Label>
+              <CreatableSelect
+                isDisabled={isCreating}
+                isClearable
+                onCreateOption={handleCreateMember}
+                onChange={handleSelectMember}
+                onMenuOpen={handleMenuOpen}
+                styles={customStyles}
+                {...{ options, isLoading }}
+              />
+              <FormControl.HelperText>
+                Select from existing members or create a new one
+              </FormControl.HelperText>
+            </FormControl>
             {isCreating && (
               <>
                 <Divider />
@@ -151,7 +176,7 @@ export const AddMemberModal = ({
           </Stack>
         </Modal.Body>
         <Modal.Footer>
-          <HStack>
+          <HStack space="sm">
             <Button variant="ghost" onPress={handleClose}>
               Cancel
             </Button>

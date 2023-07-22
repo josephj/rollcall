@@ -15,7 +15,14 @@ export const occurrenceQuery = groq`
       host->{
         _id
       },
-      attendances,
+      attendances[] {
+        _key,
+        member->{
+          _id,
+          name,
+          alias,
+        }
+      },
     },
     organization,
     "members": *[_type == "member" && references(^._id)] | order(leader) {

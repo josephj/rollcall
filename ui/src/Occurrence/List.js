@@ -1,26 +1,18 @@
 import { useState, useEffect } from "react";
-import {
-  Button,
-  Box,
-  Checkbox,
-  HStack,
-  Stack,
-  Text,
-  VStack,
-} from "native-base";
+import { Badge, Button, Box, Checkbox, HStack, Stack, Text } from "native-base";
 
 import { Card } from "../components";
 
 export const List = ({ date, gathering, onCreateOccurrence, onTickMember }) => {
   const { members = [], occurrences = [] } = gathering || {};
   const attendances = occurrences[0]?.attendances || [];
-  const attendanceMemberIds = attendances.map(({ member }) => member?._ref);
+  const attendanceMemberIds = attendances.map(({ member }) => member?._id);
   const [groupValue, setGroupValues] = useState(attendanceMemberIds);
 
   useEffect(() => {
     const { occurrences = [] } = gathering || {};
     const attendances = occurrences[0]?.attendances || [];
-    const attendanceMemberIds = attendances.map(({ member }) => member?._ref);
+    const attendanceMemberIds = attendances.map(({ member }) => member?._id);
     setGroupValues(attendanceMemberIds);
   }, [gathering]);
 
@@ -41,7 +33,7 @@ export const List = ({ date, gathering, onCreateOccurrence, onTickMember }) => {
 
   const handleClickCard = (memberId) => {
     const attendance = attendances.find(
-      ({ member }) => member._ref === memberId
+      ({ member }) => member._id === memberId
     );
     const attendanceKey = attendance?._key;
 
@@ -61,31 +53,64 @@ export const List = ({ date, gathering, onCreateOccurrence, onTickMember }) => {
     });
   };
 
+  const people = [...members, ...attendances.map(({ member }) => member)]
+    .map(({ _id, name, alias }) => ({ _id, name, alias }))
+    .reduce((result, person) => {
+      const isDuplicate = result.some(({ _id }) => _id === person._id);
+      if (!isDuplicate) {
+        result.push(person);
+      }
+      return result;
+    }, []);
+
   return (
     <Checkbox.Group value={groupValue}>
       <Stack space={5}>
-        {members.map(({ _id: memberId, name, alias }) => {
+        {people.map(({ _id: memberId, name, alias }) => {
           const isLeader = gathering?.leader?._id === memberId;
           const hostMemberId = occurrences[0]?.host?._id;
           const isHost = hostMemberId === memberId;
+          const isMember = members.some(({ _id }) => _id === memberId);
           return (
             <Card
               key={memberId}
-              textAlign="center"
               minWidth="250px"
+              textAlign="center"
               onClick={() => handleClickCard(memberId)}
             >
-              <Checkbox value={memberId}>
-                <VStack space="0" textAlign="left">
+              <Checkbox size="lg" value={memberId}>
+                <Stack space="2xs" textAlign="left">
                   <HStack space="2">
                     <Text fontWeight="500">{name}</Text>
                     <Text size="xsmall">{alias}</Text>
                   </HStack>
-                  {isLeader && (
-                    <Text fontSize="11px">⭐️ Gathering leader</Text>
-                  )}
-                  {isHost && <Text fontSize="11px">🎙️ Occurrence host</Text>}
-                </VStack>
+                  <Stack space="xs">
+                    {isLeader && (
+                      <Badge
+                        colorScheme="warning"
+                        fontSize="11px"
+                        width="110px"
+                      >
+                        <Text fontSize="11px">⭐️ Gathering leader</Text>
+                      </Badge>
+                    )}
+                    {isHost && (
+                      <Badge colorScheme="warning" fontSize="11px" width="70px">
+                        <Text fontSize="11px">🎤 Occurrence host</Text>
+                      </Badge>
+                    )}
+                    {!isLeader && isMember && (
+                      <Badge colorScheme="info" fontSize="11px" width="70px">
+                        <Text fontSize="11px">👤 Member</Text>
+                      </Badge>
+                    )}
+                    {!isMember && (
+                      <Badge colorScheme="success" fontSize="11px" width="70px">
+                        <Text fontSize="11px">👋 Visitor</Text>
+                      </Badge>
+                    )}
+                  </Stack>
+                </Stack>
               </Checkbox>
             </Card>
           );

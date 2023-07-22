@@ -65,18 +65,21 @@ export const Occurrence = () => {
     await loadGathering();
   };
 
-  const handleAddMember = async ({ memberId }) => {
+  const handleAddAttendee = async ({ memberId, isGatheringMember }) => {
     const { _id: gatheringId, occurrences } = gathering || {};
     const [{ _key: occurrenceKey }] = occurrences || [];
     setSaving(true);
-    await addMember({ memberId, gatheringId });
+    if (isGatheringMember) {
+      await addMember({ memberId, gatheringId });
+    }
     await tickAttendance({ gatheringId, occurrenceKey, memberId });
     await loadGathering();
     setSaving(false);
     onClose();
   };
 
-  const handleCreateMember = async ({ name, alias, email }) => {
+  const handleCreateMember = async ({ data, isGatheringMember }) => {
+    const { name, alias, email } = data;
     setSaving(true);
     const { _id: memberId } = await createMember({
       name,
@@ -84,7 +87,7 @@ export const Occurrence = () => {
       email,
       organizationId: gathering.organization._ref,
     });
-    await handleAddMember({ memberId });
+    await handleAddAttendee({ memberId, isGatheringMember });
     setSaving(false);
     onClose();
   };
@@ -155,7 +158,7 @@ export const Occurrence = () => {
       <AddMemberModal
         gatheringId={gathering?._id}
         onCreateMember={handleCreateMember}
-        onMemberSelect={handleAddMember}
+        onSelectMember={handleAddAttendee}
         {...{ isOpen, isSaving, onClose, occurrenceKey, members }}
       />
       <EditModal
