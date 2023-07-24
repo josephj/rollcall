@@ -4,7 +4,13 @@ import { Badge, Button, Box, Checkbox, HStack, Stack, Text } from "native-base";
 import { Card } from "../components";
 import { AttendanceMenu } from "./AttendanceMenu";
 
-export const List = ({ date, gathering, onCreateOccurrence, onTickMember }) => {
+export const List = ({
+  date,
+  gathering,
+  onCreateOccurrence,
+  onTickMember,
+  onUpdate,
+}) => {
   const { members = [], occurrences = [] } = gathering || {};
   const attendances = occurrences[0]?.attendances || [];
   const attendanceMemberIds = attendances.map(({ member }) => member?._id);
@@ -99,12 +105,12 @@ export const List = ({ date, gathering, onCreateOccurrence, onTickMember }) => {
                         <Badge
                           colorScheme="warning"
                           fontSize="11px"
-                          width="70px"
+                          width="110px"
                         >
                           <Text fontSize="11px">🎤 Occurrence host</Text>
                         </Badge>
                       )}
-                      {!isLeader && isMember && (
+                      {isMember && (
                         <Badge colorScheme="info" fontSize="11px" width="70px">
                           <Text fontSize="11px">👤 Member</Text>
                         </Badge>
@@ -125,7 +131,8 @@ export const List = ({ date, gathering, onCreateOccurrence, onTickMember }) => {
               <AttendanceMenu
                 gatheringId={gathering?._id}
                 occurrenceKey={occurrences[0]?._key}
-                {...{ memberId, isMember, isLeader, isHost }}
+                isAttended={groupValue.includes(memberId)}
+                {...{ memberId, isMember, isLeader, isHost, onUpdate }}
               />
             </HStack>
           );

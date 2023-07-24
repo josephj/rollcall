@@ -160,6 +160,7 @@ export const Occurrence = () => {
           <List
             onCreateOccurrence={handleCreateOccurrence}
             onTickMember={handleTickMember}
+            onUpdate={() => loadGathering()}
             {...{ date, gathering, isSaving }}
           />
           <Divider />
