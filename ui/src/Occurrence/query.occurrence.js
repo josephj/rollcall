@@ -5,6 +5,7 @@ export const occurrenceQuery = groq`
     _key,
     _id,
     title,
+    recurrence,
     location,
     leader->{
       _id,
@@ -24,6 +25,13 @@ export const occurrenceQuery = groq`
         }
       },
     },
+    "nextOccurrence": occurrences[date > $date] | order(date asc) {
+      _key,
+      date,
+      host->{
+        _id
+      }     
+    }[0],
     organization,
     "members": *[_type == "member" && references(^._id)] | order(leader) {
       _id,

@@ -68,7 +68,8 @@ export const List = ({
         result.push(person);
       }
       return result;
-    }, []);
+    }, [])
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <Checkbox.Group value={groupValue}>

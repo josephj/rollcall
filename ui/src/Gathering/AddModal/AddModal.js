@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { DayPicker } from "react-day-picker";
 import { format, parse } from "date-fns";
-import { Button, Stack, HStack, Modal } from "native-base";
+import { Button, HStack, Modal, Center } from "native-base";
 
 import { useApi } from "./useApi";
 
@@ -49,7 +49,7 @@ export const AddModal = ({ isOpen, onClose }) => {
         <Modal.CloseButton />
         <Modal.Header>Choose date</Modal.Header>
         <Modal.Body>
-          <Stack space={5}>
+          <Center>
             <DayPicker
               mode="single"
               disabled={disabledDays}
@@ -57,7 +57,7 @@ export const AddModal = ({ isOpen, onClose }) => {
               onSelect={setSelectedDay}
               {...{ defaultMonth }}
             />
-          </Stack>
+          </Center>
         </Modal.Body>
         <Modal.Footer>
           <HStack space="sm">

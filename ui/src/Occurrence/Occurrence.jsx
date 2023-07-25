@@ -9,8 +9,6 @@ import {
   Skeleton,
   Text,
   useDisclose,
-  Heading,
-  Center,
 } from "native-base";
 
 import { Layout } from "../components";
@@ -20,6 +18,7 @@ import { AddButton } from "./Elements";
 import { useApi } from "./useApi";
 import { sanityClient } from "../sanityClient";
 import { EditModal } from "./EditModal/";
+import { NextOccurrence } from "./NextOccurrence";
 
 export const Occurrence = () => {
   const { slug, date, org, action } = useParams();
@@ -164,15 +163,7 @@ export const Occurrence = () => {
             {...{ date, gathering, isSaving }}
           />
           <Divider />
-          <Center>
-            <Heading size="sm">Next Occurrence</Heading>
-            <Box fontSize="12px">
-              <ul>
-                <li>Date: DD/MM/YYYY</li>
-                <li>Host: Hello World</li>
-              </ul>
-            </Box>
-          </Center>
+          <NextOccurrence {...{ gathering }} />
         </Stack>
       </Layout>
       <AddButton onClick={onOpen} />

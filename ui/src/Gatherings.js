@@ -28,6 +28,7 @@ export const Gatherings = () => {
       <Stack space={5}>
         {gatherings.map(({ _id, title, name, slug }) => (
           <Card
+            key={_id}
             textAlign="center"
             minWidth="250px"
             onClick={() => navigate(`/${org}/gatherings/${slug.current}`)}

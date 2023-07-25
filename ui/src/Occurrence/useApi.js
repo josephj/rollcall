@@ -118,8 +118,6 @@ export const useApi = ({ date, slug }) => {
         .commit();
     }
 
-    console.log("=>(useApi.js:130) hostMemberId", hostMemberId);
-
     await sanityClient
       .patch(gatheringId)
       .set({

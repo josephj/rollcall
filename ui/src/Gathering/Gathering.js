@@ -27,7 +27,7 @@ const query = groq`
       alias,
     },
     location,
-    occurrences[],
+    occurrences[] | order(date desc),
     recurrence,
     "members": *[_type == "member" && references(^._id)] | order(name) {
       _id,
