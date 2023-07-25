@@ -162,8 +162,12 @@ export const Occurrence = () => {
             onUpdate={() => loadGathering()}
             {...{ date, gathering, isSaving }}
           />
-          <Divider />
-          <NextOccurrence {...{ gathering }} />
+          {occurrence ? (
+            <>
+              <Divider />
+              <NextOccurrence {...{ gathering }} />
+            </>
+          ) : null}
         </Stack>
       </Layout>
       <AddButton onClick={onOpen} />

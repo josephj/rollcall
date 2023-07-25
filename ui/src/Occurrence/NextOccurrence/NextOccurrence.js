@@ -1,5 +1,6 @@
 import { useState } from "react";
 import {
+  Link,
   VStack,
   Center,
   FormControl,
@@ -11,8 +12,10 @@ import Select from "react-select";
 
 import { useApi } from "./useApi";
 import { getNextDate } from "../../Gathering/utils";
+import { useParams } from "react-router-dom";
 
 export const NextOccurrence = ({ gathering }) => {
+  const { org, slug } = useParams();
   const { setOccurrence } = useApi({ gatheringId: gathering?._id });
   const toast = useToast();
 
@@ -69,7 +72,14 @@ export const NextOccurrence = ({ gathering }) => {
         >
           <FormControl>
             <FormControl.Label display="block">Date</FormControl.Label>
-            {nextDate}
+            <Center>
+              <Link
+                href={`/${org}/gatherings/${slug}/${nextDate}`}
+                target="_blank"
+              >
+                {nextDate}
+              </Link>
+            </Center>
           </FormControl>
           <FormControl>
             <FormControl.Label display="block">
