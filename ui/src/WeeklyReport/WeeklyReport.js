@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { Link, useParams } from "react-router-dom";
-import { FlatList, HStack, Stack, Text } from "native-base";
+import { Box, Center, FlatList, HStack, Stack, Text } from "native-base";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import "dayjs/locale/en";
 
@@ -20,6 +20,7 @@ export const WeeklyReport = () => {
     startDate,
     endDate,
   });
+
   const gatherings =
     data?.map((item) => ({
       id: item._id,
@@ -28,8 +29,8 @@ export const WeeklyReport = () => {
 
   return (
     <Layout headerContent="Weekly Report" {...{ isLoading }}>
-      <Text fontSize="md">
-        <Stack space="10">
+      <Stack space="10">
+        <Center>
           <Stack space="2">
             <HStack space="2">
               <Text>From:</Text>
@@ -40,42 +41,61 @@ export const WeeklyReport = () => {
               <Text>{endDateTime.format("LLLL")}</Text>
             </HStack>
           </Stack>
-          <FlatList
-            data={gatherings}
-            renderItem={({ index, item }) => (
-              <HStack py="1" space="2" key={item._id}>
-                <Text textAlign="right" width="10">
-                  {index + 1}.
-                </Text>
-                <Text>
-                  <Link to={`/${org}/gatherings/${item.slug?.current}`}>
-                    {item.title}
-                  </Link>{" "}
-                  :
-                </Text>
-                <Text>{item.total}</Text>
-                {item.total > 0 && (
-                  <>
-                    (
-                    <HStack space="xs">
-                      {item.occurrences.map(({ date, _key, attendances }) => (
-                        <Text fontSize="sm" key={_key}>
-                          <Link
-                            to={`/${org}/gatherings/${item.slug?.current}/${date}`}
-                          >
-                            {date}
-                          </Link>
-                        </Text>
-                      ))}
-                    </HStack>
-                    )
-                  </>
+        </Center>
+        <FlatList
+          data={gatherings}
+          renderItem={({ index, item }) => (
+            <HStack py="1" space="2" key={item._id}>
+              <Text textAlign="right" width="10">
+                {index + 1}.
+              </Text>
+              <Stack space="2xs">
+                <HStack space="2">
+                  <Text>
+                    <Link to={`/${org}/gatherings/${item.slug?.current}`}>
+                      {item.title}
+                    </Link>{" "}
+                    :
+                  </Text>
+                  <Text>{item.total}</Text>
+                  <HStack>
+                    {item.total > 0 && (
+                      <>
+                        (
+                        <HStack space="2xs" divider={<Text>|</Text>}>
+                          {item.occurrences.map(
+                            ({ date, _key, attendances }) => (
+                              <Text fontSize="sm" key={_key}>
+                                <Link
+                                  to={`/${org}/gatherings/${item.slug?.current}/${date}`}
+                                >
+                                  {date}
+                                </Link>
+                              </Text>
+                            )
+                          )}
+                        </HStack>
+                        )
+                      </>
+                    )}
+                  </HStack>
+                </HStack>
+                {item.nextOccurrence ? (
+                  <HStack space="2xs" fontSize="xs">
+                    <Text fontWeight="semibold">Next host:</Text>
+                    <Text>{item.nextOccurrence.host.name}</Text>
+                    {!!item.nextOccurrence.host.alias && (
+                      <Text>({item.nextOccurrence.host.alias})</Text>
+                    )}
+                  </HStack>
+                ) : (
+                  <Box height="15px" />
                 )}
-              </HStack>
-            )}
-          />
-        </Stack>
-      </Text>
+              </Stack>
+            </HStack>
+          )}
+        />
+      </Stack>
     </Layout>
   );
 };

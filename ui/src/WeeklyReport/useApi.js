@@ -15,7 +15,16 @@ const query = groq`
       date,
       _key,
       attendances[]
-    }
+    },
+    "nextOccurrence": occurrences[date > $endDate] | order(date asc) {
+      _key,
+      date,
+      host->{
+        _id,
+        name, 
+        alias
+      }     
+    }[0]
   }
 `;
 
