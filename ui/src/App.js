@@ -47,6 +47,7 @@ export const App = () => {
         <Stack space={5}>
           {organizations.map(({ _id, slug, name }) => (
             <Card
+              key={_id}
               textAlign="center"
               minWidth="250px"
               onClick={() => handleClick(slug.current)}

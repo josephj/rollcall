@@ -1,7 +1,7 @@
 import { Pressable, Box } from "native-base";
 
-export const Card = ({ children, ...rest }) => (
-  <Pressable>
+export const Card = ({ children, key, ...rest }) => (
+  <Pressable {...{ key }}>
     {({ isHovered, isPressed }) => {
       return (
         <Box

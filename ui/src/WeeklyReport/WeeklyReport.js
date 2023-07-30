@@ -16,10 +16,15 @@ export const WeeklyReport = () => {
   const { startDateTime, endDateTime } = getReportStartEndDateTimes();
   const startDate = startDateTime.format("YYYY-MM-DD");
   const endDate = endDateTime.format("YYYY-MM-DD");
-  const { data: gatherings, isLoading } = useApi({
+  const { data, isLoading } = useApi({
     startDate,
     endDate,
   });
+  const gatherings =
+    data?.map((item) => ({
+      id: item._id,
+      ...item,
+    })) || [];
 
   return (
     <Layout headerContent="Weekly Report" {...{ isLoading }}>
@@ -38,7 +43,7 @@ export const WeeklyReport = () => {
           <FlatList
             data={gatherings}
             renderItem={({ index, item }) => (
-              <HStack py="1" space="2">
+              <HStack py="1" space="2" key={item._id}>
                 <Text textAlign="right" width="10">
                   {index + 1}.
                 </Text>
@@ -50,17 +55,21 @@ export const WeeklyReport = () => {
                 </Text>
                 <Text>{item.total}</Text>
                 {item.total > 0 && (
-                  <Text fontSize="sm">
+                  <>
                     (
-                    {item.occurrences.map(({ date, _key, attendances }) => (
-                      <Link
-                        to={`/${org}/gatherings/${item.slug?.current}/${date}`}
-                      >
-                        {date}
-                      </Link>
-                    ))}
+                    <HStack space="xs">
+                      {item.occurrences.map(({ date, _key, attendances }) => (
+                        <Text fontSize="sm" key={_key}>
+                          <Link
+                            to={`/${org}/gatherings/${item.slug?.current}/${date}`}
+                          >
+                            {date}
+                          </Link>
+                        </Text>
+                      ))}
+                    </HStack>
                     )
-                  </Text>
+                  </>
                 )}
               </HStack>
             )}
