@@ -33,6 +33,15 @@ export const setAttendanceAsOccurrenceHost = ({
     })
     .commit({ autoGenerateArrayKeys: true });
 
+export const unsetAttendanceAsOccurrenceHost = ({
+  gatheringId,
+  occurrenceKey,
+}) =>
+  sanityClient
+    .patch(gatheringId)
+    .unset([`occurrences[_key=="${occurrenceKey}"].host`])
+    .commit({ autoGenerateArrayKeys: true });
+
 export const useApi = ({ memberId, occurrenceKey, gatheringId }) => {
   const setAsMember = () => addMemberToGathering({ memberId, gatheringId });
 
@@ -45,10 +54,14 @@ export const useApi = ({ memberId, occurrenceKey, gatheringId }) => {
   const setAsLeader = () =>
     setMemberAsGatheringLeader({ memberId, gatheringId });
 
+  const unsetAsHost = () =>
+    unsetAttendanceAsOccurrenceHost({ gatheringId, occurrenceKey });
+
   return {
     setAsHost,
     setAsLeader,
     setAsMember,
     setAsVisitor,
+    unsetAsHost,
   };
 };
