@@ -7,7 +7,8 @@
     "start": "../node_modules/.bin/sanity start",
     "build": "../node_modules/.bin/sanity build",
     "deploy": "../node_modules/.bin/sanity deploy",
-    "deploy-graphql": "../node_modules/.bin/sanity graphql deploy"
+    "deploy-graphql": "../node_modules/.bin/sanity graphql deploy",
+    "generate-types": "npx sanity-codegen codegen"
   },
   "keywords": [
     "sanity"
@@ -25,7 +26,8 @@
   "devDependencies": {
     "@sanity/eslint-config-studio": "^2.0.1",
     "eslint": "^8.6.0",
-    "prettier": "^2.8.4",
+    "prettier": "^3.0.0",
+    "sanity-codegen": "alpha",
     "typescript": "^4.0.0"
   },
   "prettier": {

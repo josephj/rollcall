@@ -97,7 +97,7 @@ export const Gathering = () => {
     <>
       <Layout headerContent={renderHeaderContent()} isLoading={!gathering}>
         <Stack space={5}>
-          <Info {...{ gathering }} />
+          {gathering ? <Info {...{ gathering }} /> : null}
           <List
             onCreate={handleCreate}
             onEdit={handleEdit}
