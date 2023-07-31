@@ -80,7 +80,7 @@ export const WeeklyReport = () => {
                     )}
                   </HStack>
                 </HStack>
-                {item.nextOccurrence ? (
+                {!!item?.nextOccurrence?.host ? (
                   <HStack space="2xs" fontSize="xs">
                     <Text fontWeight="semibold">Next host:</Text>
                     <Text>{item.nextOccurrence.host.name}</Text>

@@ -11,7 +11,7 @@ export const Info = ({ gathering }) => {
 
   return (
     <Center>
-      <VStack>
+      <VStack space="sm" textAlign="center">
         {location ? <Text>Location: {location}</Text> : null}
         {rrule.toText() ? <Text>Time: {rrule.toText()}</Text> : null}
         {leader ? (

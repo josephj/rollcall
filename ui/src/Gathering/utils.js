@@ -17,13 +17,11 @@ export const getUpcomingDates = ({ rrule }) => {
 export const getNextDate = (rruleString, currentDate) => {
   const rule = rrulestr(rruleString);
   const date = dayjs(currentDate || new Date());
-  console.log("=>(utils.js:20) date", date);
 
   const occurrences = rule.between(
     date.add(1, "day").toDate(),
     dayjs().add(1, "year").toDate()
   );
-  console.log("=>(utils.js:26) occurrences", occurrences);
   const nextDate = occurrences.find((occurrence) =>
     dayjs(occurrence).isAfter(date)
   );

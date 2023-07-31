@@ -80,7 +80,7 @@ export const List = ({
           const isHost = hostMemberId === memberId;
           const isMember = members.some(({ _id }) => _id === memberId);
           return (
-            <HStack alignItems="center" key={memberId} space="sm">
+            <Box key={memberId}>
               <Card
                 minWidth="250px"
                 textAlign="center"
@@ -129,13 +129,15 @@ export const List = ({
                   </Stack>
                 </Checkbox>
               </Card>
-              <AttendanceMenu
-                gatheringId={gathering?._id}
-                occurrenceKey={occurrences[0]?._key}
-                isAttended={groupValue.includes(memberId)}
-                {...{ memberId, isMember, isLeader, isHost, onUpdate }}
-              />
-            </HStack>
+              <Box position="absolute" right="-25px" top="45%">
+                <AttendanceMenu
+                  gatheringId={gathering?._id}
+                  occurrenceKey={occurrences[0]?._key}
+                  isAttended={groupValue.includes(memberId)}
+                  {...{ memberId, isMember, isLeader, isHost, onUpdate }}
+                />
+              </Box>
+            </Box>
           );
         })}
       </Stack>
