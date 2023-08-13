@@ -4,6 +4,7 @@ import {
   Menu,
   Modal,
   Pressable,
+  Spinner,
   Stack,
   Text,
   ThreeDotsIcon,
@@ -35,7 +36,9 @@ export const AttendanceMenu = ({
     });
 
   const handleSetLeader = async () => {
+    setSaving(true);
     await setAsLeader();
+    setSaving(false);
     onUpdate();
     toast.show({
       description: "The attendance has been set to the group leader",
@@ -58,7 +61,9 @@ export const AttendanceMenu = ({
   };
 
   const handleSetMember = async () => {
+    setSaving(true);
     await setAsMember();
+    setSaving(false);
     onUpdate();
     toast.show({
       description: "The visitor is now a member",
@@ -67,7 +72,9 @@ export const AttendanceMenu = ({
   };
 
   const handleSetHost = async () => {
+    setSaving(true);
     await setAsHost();
+    setSaving(false);
     onUpdate();
     toast.show({
       description: "The attendance has been set to the occurrence host",
@@ -76,7 +83,9 @@ export const AttendanceMenu = ({
   };
 
   const handleUnsetHost = async () => {
+    setSaving(true);
     await unsetAsHost();
+    setSaving(false);
     onUpdate();
     toast.show({
       description: "The attendance has been removed from the host role",
@@ -88,8 +97,12 @@ export const AttendanceMenu = ({
     <>
       <Menu
         trigger={(triggerProps) => (
-          <Pressable accessibilityLabel="More options menu" {...triggerProps}>
-            <ThreeDotsIcon />
+          <Pressable
+            accessibilityLabel="More options menu"
+            isDisabled={isSaving}
+            {...triggerProps}
+          >
+            {isSaving ? <Spinner color="gray.500" /> : <ThreeDotsIcon />}
           </Pressable>
         )}
         {...{ isOpen, onClose, onOpen }}
