@@ -18,11 +18,11 @@ export default defineConfig([
     },
   },
   {
-    name: 'staging-workspace',
+    name: 'development-workspace',
     title: '點名系統（測試環境）',
     projectId: '5wmwst53',
     dataset: 'development',
-    basePath: '/staging',
+    basePath: '/development',
     icon: RobotIcon,
     plugins: [deskTool(), visionTool()],
     schema: {
