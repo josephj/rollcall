@@ -13,13 +13,8 @@ import { Occurrence } from "./Occurrence";
 import { WeeklyReport } from "./WeeklyReport";
 import "./index.css";
 
-const env =
-  process.env.REACT_APP_DATA_SET === "production"
-    ? "production"
-    : "development";
-
 export const client = new ApolloClient({
-  uri: `https://5wmwst53.api.sanity.io/v1/graphql/${env}/default`,
+  uri: "https://5wmwst53.api.sanity.io/v1/graphql/production/default",
   cache: new InMemoryCache(),
 });
 
@@ -78,7 +73,7 @@ root.render(
         <RouterProvider router={router} />
       </NativeBaseProvider>
     </ApolloProvider>
-  </StrictMode>,
+  </StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
