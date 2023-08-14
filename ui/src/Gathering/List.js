@@ -10,9 +10,9 @@ export const List = ({ gathering, onCreate, onEdit }) => {
 
   const { occurrences = [], recurrence } = gathering || {};
   const rrule = rrulestr(recurrence);
-  const createdDates = occurrences.map(({ date }) => date);
+  const createdDates = occurrences?.map?.(({ date }) => date) || [];
   const notCreatedDates = getUpcomingDates({ rrule }).filter(
-    (date) => !createdDates.includes(date)
+    (date) => !createdDates.includes(date),
   );
 
   return (

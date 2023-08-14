@@ -10,7 +10,7 @@ const QUERY = [
 export const useApi = ({ slug }) => {
   const { data: rawData, isLoading } = useQuery(QUERY, { slug });
   const gatheringId = rawData?._id;
-  const usedDateStrings = rawData?.occurrences.map?.(({ date }) => date) || [];
+  const usedDateStrings = rawData?.occurrences?.map?.(({ date }) => date) || [];
 
   const createOccurrence = useCallback(
     ({ date }) =>
@@ -19,7 +19,7 @@ export const useApi = ({ slug }) => {
         .setIfMissing({ occurrences: [] })
         .append("occurrences", [{ date, attendances: [], _type: "occurrence" }])
         .commit({ autoGenerateArrayKeys: true }),
-    [gatheringId]
+    [gatheringId],
   );
 
   return {
