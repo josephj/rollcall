@@ -29,13 +29,15 @@ export const AddMemberModal = ({
   const [isLoading, setLoading] = useState(false);
   const [isCreating, setCreating] = useState(false);
   const [isGatheringMember, setGatheringMember] = useState(false);
+  const [selectedOption, setSelectedOption] = useState(null);
   const { control, handleSubmit, reset, setValue } = useForm();
 
   useEffect(() => {
     if (!isOpen) {
+      setSelectedOption(null);
       reset();
     }
-  }, [isOpen, reset]);
+  }, [isOpen, reset, selectedOption]);
 
   const fetchMembers = useCallback(
     async ({ searchString = "" } = {}) => {
@@ -54,7 +56,7 @@ export const AddMemberModal = ({
       setOptions(options);
       setLoading(false);
     },
-    [gatheringId, gatheringMembers, occurrenceKey]
+    [gatheringId, gatheringMembers, occurrenceKey],
   );
 
   const handleAddMember = (data) => {
@@ -67,7 +69,8 @@ export const AddMemberModal = ({
     reset();
   };
 
-  const handleSelectMember = async ({ value: memberId }) => {
+  const handleSelectMember = () => {
+    const { value: memberId } = selectedOption;
     onSelectMember({ memberId, isGatheringMember });
   };
 
@@ -119,8 +122,9 @@ export const AddMemberModal = ({
                 isDisabled={isCreating}
                 isClearable
                 onCreateOption={handleCreateMember}
-                onChange={handleSelectMember}
+                onChange={setSelectedOption}
                 onMenuOpen={handleMenuOpen}
+                value={selectedOption}
                 styles={customStyles}
                 {...{ options, isLoading }}
               />
@@ -182,9 +186,11 @@ export const AddMemberModal = ({
             </Button>
             <Button
               form="add-member-form"
-              isDisabled={!isCreating}
+              isDisabled={!isCreating && !selectedOption}
               isLoading={isSaving}
-              onPress={handleSubmit(handleAddMember)}
+              onPress={handleSubmit(
+                isCreating ? handleAddMember : handleSelectMember,
+              )}
             >
               Save
             </Button>
