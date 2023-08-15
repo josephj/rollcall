@@ -37,6 +37,14 @@ const query = groq`
   }
 `;
 
+const queryOccurrenceDate = groq`
+  *[_type == "gathering" && slug.current == $slug][0] {
+    "occurrence": occurrences[date == $date][0] {
+      _key
+    }
+  }
+`;
+
 export const Gathering = () => {
   const { org, slug } = useParams();
   const [gathering, setGathering] = useState();
@@ -58,11 +66,18 @@ export const Gathering = () => {
   const { _id, title } = gathering || {};
 
   const handleCreate = async (date) => {
-    await sanityClient
-      .patch(_id)
-      .setIfMissing({ occurrences: [] })
-      .append("occurrences", [{ date, attendances: [], _type: "occurrence" }])
-      .commit({ autoGenerateArrayKeys: true });
+    const { occurrence } = await sanityClient.fetch(queryOccurrenceDate, {
+      slug,
+      date,
+    });
+
+    if (!occurrence) {
+      await sanityClient
+        .patch(_id)
+        .setIfMissing({ occurrences: [] })
+        .append("occurrences", [{ date, attendances: [], _type: "occurrence" }])
+        .commit({ autoGenerateArrayKeys: true });
+    }
 
     navigate(`/${org}/gatherings/${slug}/${date}`);
   };

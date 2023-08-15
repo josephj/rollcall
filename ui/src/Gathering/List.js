@@ -1,9 +1,12 @@
-import { Heading, Stack, Text } from "native-base";
+import { useState } from "react";
+import { Center, Heading, HStack, Spinner, Stack, Text } from "native-base";
 import { Card } from "../components";
 import { getUpcomingDates } from "./utils";
 import { rrulestr } from "rrule";
 
 export const List = ({ gathering, onCreate, onEdit }) => {
+  const [isCreating, setCreating] = useState(false);
+
   if (!gathering) {
     return null;
   }
@@ -14,6 +17,13 @@ export const List = ({ gathering, onCreate, onEdit }) => {
   const notCreatedDates = getUpcomingDates({ rrule }).filter(
     (date) => !createdDates.includes(date),
   );
+
+  const handleClickCreate = (date) => () => {
+    if (!isCreating) {
+      setCreating(true);
+      onCreate(date);
+    }
+  };
 
   return (
     <>
@@ -28,9 +38,19 @@ export const List = ({ gathering, onCreate, onEdit }) => {
                 key={date}
                 textAlign="center"
                 minWidth="250px"
-                onClick={() => onCreate(date)}
+                isDisabled={isCreating}
+                onClick={!isCreating && handleClickCreate(date)}
               >
-                <Text fontWeight="500">{date}</Text>
+                {isCreating ? (
+                  <Center alignItems="center">
+                    <HStack space="xs">
+                      <Text fontWeight="500">Creating {date}</Text>
+                      <Spinner color="gray.500" />
+                    </HStack>
+                  </Center>
+                ) : (
+                  <Text fontWeight="500">{date}</Text>
+                )}
               </Card>
             ))}
           </Stack>
