@@ -33,7 +33,7 @@ export const occurrenceQuery = groq`
       }     
     }[0],
     organization,
-    "members": *[_type == "member" && references(^._id)] | order(leader) {
+    "members": *[_type == "member" && references(^._id) && !(_id in path("drafts.**"))] | order(leader) {
       _id,
       name,
       alias,
