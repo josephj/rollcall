@@ -28,23 +28,11 @@ export const AttendanceMenu = ({
   const [isConfirmVisible, setConfirmVisibility] = useState(false);
   const [isSaving, setSaving] = useState(false);
   const toast = useToast();
-  const { setAsMember, setAsHost, setAsLeader, setAsVisitor, unsetAsHost } =
-    useApi({
-      gatheringId,
-      memberId,
-      occurrenceKey,
-    });
-
-  const handleSetLeader = async () => {
-    setSaving(true);
-    await setAsLeader();
-    setSaving(false);
-    onUpdate();
-    toast.show({
-      description: "The attendance has been set to the group leader",
-      isClosable: true,
-    });
-  };
+  const { setAsMember, setAsHost, setAsVisitor, unsetAsHost } = useApi({
+    gatheringId,
+    memberId,
+    occurrenceKey,
+  });
 
   const handleSetVisitor = async () => {
     setSaving(true);
@@ -112,7 +100,7 @@ export const AttendanceMenu = ({
             {!isMember && (
               <Menu.Item onPress={handleSetMember}>👤 Set as member</Menu.Item>
             )}
-            {isMember && isAttended && (
+            {isMember && !isLeader && isAttended && (
               <Menu.Item onPress={handleSetVisitor}>
                 👋 Set as visitor
               </Menu.Item>
@@ -120,15 +108,12 @@ export const AttendanceMenu = ({
             {!isHost && (
               <Menu.Item onPress={handleSetHost}>🎤 Set as host</Menu.Item>
             )}
-            {!isLeader && isMember && (
-              <Menu.Item onPress={handleSetLeader}>⭐️ Set as leader</Menu.Item>
-            )}
             {isHost && (
               <Menu.Item onPress={handleUnsetHost}>
                 🔇 Remove the host role
               </Menu.Item>
             )}
-            {isMember && !isAttended && (
+            {isMember && !isLeader && !isAttended && (
               <Menu.Item onPress={() => setConfirmVisibility(true)}>
                 <Text color="red.500">🛑 Remove this member</Text>
               </Menu.Item>

@@ -82,9 +82,7 @@ export const NextOccurrence = ({ gathering }) => {
             </Center>
           </FormControl>
           <FormControl>
-            <FormControl.Label display="block">
-              Occurrence host
-            </FormControl.Label>
+            <FormControl.Label display="block">Host</FormControl.Label>
             <Select
               defaultValue={value}
               isClearable

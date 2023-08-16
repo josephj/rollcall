@@ -12,12 +12,6 @@ export const addMemberToGathering = ({ memberId, gatheringId }) =>
     .append("gatherings", [{ _ref: gatheringId, _type: "reference" }])
     .commit({ autoGenerateArrayKeys: true });
 
-export const setMemberAsGatheringLeader = ({ memberId, gatheringId }) =>
-  sanityClient
-    .patch(gatheringId)
-    .set({ leader: { _ref: memberId, _type: "reference" } })
-    .commit();
-
 export const setAttendanceAsOccurrenceHost = ({
   gatheringId,
   occurrenceKey,
@@ -51,15 +45,11 @@ export const useApi = ({ memberId, occurrenceKey, gatheringId }) => {
   const setAsHost = () =>
     setAttendanceAsOccurrenceHost({ gatheringId, occurrenceKey, memberId });
 
-  const setAsLeader = () =>
-    setMemberAsGatheringLeader({ memberId, gatheringId });
-
   const unsetAsHost = () =>
     unsetAttendanceAsOccurrenceHost({ gatheringId, occurrenceKey });
 
   return {
     setAsHost,
-    setAsLeader,
     setAsMember,
     setAsVisitor,
     unsetAsHost,

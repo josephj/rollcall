@@ -40,7 +40,7 @@ export const List = ({
 
   const handleClickCard = (memberId) => {
     const attendance = attendances.find(
-      ({ member }) => member._id === memberId
+      ({ member }) => member._id === memberId,
     );
     const attendanceKey = attendance?._key;
 
@@ -91,24 +91,16 @@ export const List = ({
                     <HStack space="2">
                       <Text fontWeight="500">{name}</Text>
                       <Text size="xsmall">{alias}</Text>
+                      {isLeader && <Text>⭐️</Text>}
                     </HStack>
                     <Stack space="xs">
-                      {isLeader && (
-                        <Badge
-                          colorScheme="warning"
-                          fontSize="11px"
-                          width="110px"
-                        >
-                          <Text fontSize="11px">⭐️ Gathering leader</Text>
-                        </Badge>
-                      )}
                       {isHost && (
                         <Badge
                           colorScheme="warning"
                           fontSize="11px"
-                          width="110px"
+                          width="70px"
                         >
-                          <Text fontSize="11px">🎤 Occurrence host</Text>
+                          <Text fontSize="11px">🎤 Host</Text>
                         </Badge>
                       )}
                       {isMember && (
