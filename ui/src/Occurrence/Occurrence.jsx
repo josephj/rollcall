@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
 import {
-  Box,
   Divider,
   HStack,
   Stack,
@@ -24,7 +23,6 @@ export const Occurrence = () => {
   const { slug, date, org, action } = useParams();
   const navigate = useNavigate();
   const [gathering, setGathering] = useState();
-  const [total, setTotal] = useState(0);
   const [isSaving, setSaving] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclose();
   const {
@@ -42,12 +40,6 @@ export const Occurrence = () => {
   const members = gathering?.members || [];
   const occurrence = gathering?.occurrences?.[0];
   const occurrenceKey = occurrence?._key;
-  const attendances = occurrence?.attendances || [];
-  const attendancesTotal = attendances.length;
-
-  useEffect(() => {
-    setTotal(attendancesTotal);
-  }, [attendancesTotal]);
 
   const loadGathering = useCallback(async () => {
     try {
@@ -62,17 +54,19 @@ export const Occurrence = () => {
     loadGathering();
   }, [date, fetchOccurrence, loadGathering, slug]);
 
-  const handleTickMember = async ({ attendanceMemberIds }) => {
-    const { _id: gatheringId, occurrences } = gathering || {};
-    const [{ _key: occurrenceKey }] = occurrences || [];
-    setTotal(attendanceMemberIds.length);
-    await updateAttendances({
-      gatheringId,
-      occurrenceKey,
-      attendanceMemberIds,
-    });
-    await loadGathering();
-  };
+  const handleTickMember = useCallback(
+    async ({ attendanceMemberIds }) => {
+      const { _id: gatheringId, occurrences } = gathering || {};
+      const [{ _key: occurrenceKey }] = occurrences || [];
+      await updateAttendances({
+        gatheringId,
+        occurrenceKey,
+        attendanceMemberIds,
+      });
+      await loadGathering();
+    },
+    [gathering, loadGathering, updateAttendances],
+  );
 
   const handleAddAttendee = async ({ memberId, isGatheringMember }) => {
     const { _id: gatheringId, occurrences } = gathering || {};
@@ -153,15 +147,14 @@ export const Occurrence = () => {
         isLoading={!gathering || isSaving}
       >
         <Stack space={5}>
-          <Box alignSelf="center" textAlign="center">
-            <Text>Attendances: {total}</Text>
-          </Box>
-          <List
-            onCreateOccurrence={handleCreateOccurrence}
-            onTickMember={handleTickMember}
-            onUpdate={() => loadGathering()}
-            {...{ date, gathering, isSaving }}
-          />
+          {gathering ? (
+            <List
+              onCreateOccurrence={handleCreateOccurrence}
+              onTickMember={handleTickMember}
+              onUpdate={() => loadGathering()}
+              {...{ date, gathering, isSaving }}
+            />
+          ) : null}
           {occurrence ? (
             <>
               <Divider />
