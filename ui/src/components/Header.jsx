@@ -8,6 +8,7 @@ import {
   Pressable,
   Text,
 } from "native-base";
+import { t } from "@lingui/macro";
 
 export const Header = ({ children, ...otherProps }) => {
   const { org } = useParams();
@@ -45,7 +46,7 @@ export const Header = ({ children, ...otherProps }) => {
               variant="unstyled"
               onPress={() => navigate("/")}
             >
-              Home
+              {t`Home`}
             </Button>
           </Menu.Item>
           <Menu.Item>
@@ -54,7 +55,7 @@ export const Header = ({ children, ...otherProps }) => {
               variant="unstyled"
               onPress={() => navigate(`/${org}/weekly-report`)}
             >
-              Weekly Report
+              {t`Weekly Report`}
             </Button>
           </Menu.Item>
         </Menu>

@@ -2,15 +2,17 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { ApolloProvider } from "@apollo/client";
 import { ApolloClient, InMemoryCache } from "@apollo/client";
+
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { NativeBaseProvider } from "native-base";
 
 import { App } from "./App";
-import reportWebVitals from "./reportWebVitals";
 import { Gatherings } from "./Gatherings";
 import { Gathering } from "./Gathering";
 import { Occurrence } from "./Occurrence";
 import { WeeklyReport } from "./WeeklyReport";
+import { I18nApp } from "./i18n";
+import reportWebVitals from "./reportWebVitals";
 import "./index.css";
 
 const env = process.env.REACT_APP_DATA_SET || "development";
@@ -67,13 +69,16 @@ const router = createBrowserRouter([
   },
 ]);
 
-const root = createRoot(document.getElementById("root"));
+const rootEl = document.getElementById("root");
+const root = createRoot(rootEl!);
 root.render(
   <StrictMode>
     <ApolloProvider {...{ client }}>
-      <NativeBaseProvider>
-        <RouterProvider router={router} />
-      </NativeBaseProvider>
+      <I18nApp>
+        <NativeBaseProvider>
+          <RouterProvider {...{ router }} />
+        </NativeBaseProvider>
+      </I18nApp>
     </ApolloProvider>
   </StrictMode>,
 );

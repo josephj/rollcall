@@ -10,6 +10,7 @@ import {
   Modal,
 } from "native-base";
 import CreatableSelect from "react-select/creatable";
+import { t } from "@lingui/macro";
 
 import { HookInput } from "../components";
 import { sanityClient } from "../sanityClient";
@@ -95,7 +96,7 @@ export const AddMemberModal = ({
     <Modal isOpen size="md" {...{ isOpen, onClose }}>
       <Modal.Content>
         <Modal.CloseButton />
-        <Modal.Header>Add new attendee</Modal.Header>
+        <Modal.Header>{t`Add new attendee`}</Modal.Header>
         <Modal.Body minHeight="450px">
           <Stack space={5}>
             <FormControl>
@@ -109,18 +110,21 @@ export const AddMemberModal = ({
                   margin="0"
                   onClick={() => setGatheringMember(!isGatheringMember)}
                 >
-                  Member
+                  {t`Member`}
                 </FormControl.Label>
                 <FormControl.HelperText margin="0">
-                  Save the attendee as gathering member
+                  {t`Save the attendee as gathering member`}
                 </FormControl.HelperText>
               </HStack>
             </FormControl>
             <FormControl isRequired>
-              <FormControl.Label>Attendee:</FormControl.Label>
+              <FormControl.Label>{t`Attendee:`}</FormControl.Label>
               <CreatableSelect
                 isDisabled={isCreating}
                 isClearable
+                placeholder={t`Select or create a new attendee`}
+                loadingMessage={() => t`Loading...`}
+                formatCreateLabel={(inputValue) => t`Create "${inputValue}"`}
                 onCreateOption={handleCreateMember}
                 onChange={setSelectedOption}
                 onMenuOpen={handleMenuOpen}
@@ -129,7 +133,7 @@ export const AddMemberModal = ({
                 {...{ options, isLoading }}
               />
               <FormControl.HelperText>
-                Select from existing members or create a new one
+                {t`Select from existing members or create a new one`}
               </FormControl.HelperText>
             </FormControl>
             {isCreating && (
@@ -141,23 +145,23 @@ export const AddMemberModal = ({
                 >
                   <Stack space={5}>
                     <FormControl>
-                      <FormControl.Label>Name</FormControl.Label>
+                      <FormControl.Label>{t`Name`}</FormControl.Label>
                       <HookInput
                         backgroundColor="white"
                         fontSize="13px"
                         name="name"
-                        placeholder="English name (e.g. Jeffrey Wang)"
+                        placeholder={t`English name (e.g. Jeffrey Wang)`}
                         type="text"
                         {...{ control }}
                       />
                     </FormControl>
                     <FormControl>
-                      <FormControl.Label>Alias</FormControl.Label>
+                      <FormControl.Label>{t`Alias`}</FormControl.Label>
                       <HookInput
                         backgroundColor="white"
                         fontSize="13px"
                         name="alias"
-                        placeholder="Chinese name (e.g. 王耀輝)"
+                        placeholder={t`Chinese name (e.g. 王耀輝)`}
                         type="text"
                         {...{ control }}
                       />
@@ -168,7 +172,7 @@ export const AddMemberModal = ({
                         backgroundColor="white"
                         fontSize="13px"
                         name="email"
-                        placeholder="e.g. abc@gmail.com"
+                        placeholder={t`e.g. abc@gmail.com`}
                         type="email"
                         {...{ control }}
                       />
@@ -182,7 +186,7 @@ export const AddMemberModal = ({
         <Modal.Footer>
           <HStack space="sm">
             <Button variant="ghost" onPress={handleClose}>
-              Cancel
+              {t`Cancel`}
             </Button>
             <Button
               form="add-member-form"
@@ -192,7 +196,7 @@ export const AddMemberModal = ({
                 isCreating ? handleAddMember : handleSelectMember,
               )}
             >
-              Save
+              {t`Save`}
             </Button>
           </HStack>
         </Modal.Footer>

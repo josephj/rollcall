@@ -1,4 +1,5 @@
-import { Flex, HStack, Spinner, Text } from "native-base";
+import { Flex, HStack, Spinner } from "native-base";
+import { Trans } from "@lingui/macro";
 
 export const LoadingSpinner = ({ isOverlay = false }) => {
   const styles = isOverlay
@@ -17,7 +18,7 @@ export const LoadingSpinner = ({ isOverlay = false }) => {
     <Flex alignItems="center" justifyContent="center" {...styles}>
       <HStack alignItems="center" space={2} justifyContent="center">
         <Spinner color="gray.500" />
-        <Text fontSize="md">Loading...</Text>
+        <Trans fontSize="md">Loading...</Trans>
       </HStack>
     </Flex>
   );

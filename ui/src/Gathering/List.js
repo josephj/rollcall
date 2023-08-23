@@ -3,6 +3,7 @@ import { Center, Heading, HStack, Spinner, Stack, Text } from "native-base";
 import { Card } from "../components";
 import { getUpcomingDates } from "./utils";
 import { rrulestr } from "rrule";
+import { t, Trans } from "@lingui/macro";
 
 export const List = ({ gathering, onCreate, onEdit }) => {
   const [isCreating, setCreating] = useState(false);
@@ -30,7 +31,7 @@ export const List = ({ gathering, onCreate, onEdit }) => {
       {notCreatedDates.length ? (
         <Stack as="section" space="5">
           <Heading size="sm" textAlign="center">
-            Not Established
+            <Trans>Not Established</Trans>
           </Heading>
           <Stack space="5">
             {notCreatedDates.map((date) => (
@@ -60,7 +61,7 @@ export const List = ({ gathering, onCreate, onEdit }) => {
       {createdDates.length ? (
         <Stack space="5">
           <Heading size="sm" textAlign="center">
-            Established
+            <Trans>Established</Trans>
           </Heading>
           <Stack space="5">
             {occurrences.map(({ _key, date, attendances = [] }) => (
@@ -74,7 +75,7 @@ export const List = ({ gathering, onCreate, onEdit }) => {
                   {date}
                 </Text>
                 <Text fontSize="11">
-                  Attendances:{" "}
+                  {t`Attendances:`}{" "}
                   <Text fontWeight="500">{attendances.length}</Text>
                 </Text>
               </Card>

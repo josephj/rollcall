@@ -10,6 +10,7 @@ import {
   Text,
   useDisclose,
 } from "native-base";
+import { t } from "@lingui/macro";
 
 import { Layout } from "../components";
 import { sanityClient } from "../sanityClient";
@@ -91,7 +92,7 @@ export const Gathering = () => {
       return (
         <HStack alignItems="center" space="3">
           <Text fontSize="lg" fontWeight="500">
-            <Link to={`/${org}/gatherings`}>Gatherings</Link>
+            <Link to={`/${org}/gatherings`}>{t`Gatherings`}</Link>
           </Text>
           <Text color="gray.300">&gt;</Text>
           <Skeleton w="100" h="5" rounded="sm" my="1" endColor="gray.200" />
@@ -101,7 +102,7 @@ export const Gathering = () => {
 
     return (
       <HStack alignItems="center" space="3">
-        <Link to={`/${org}/gatherings`}>Gatherings</Link>
+        <Link to={`/${org}/gatherings`}>{t`Gatherings`}</Link>
         <Text color="gray.300">&gt;</Text>
         <Text>{title}</Text>
       </HStack>

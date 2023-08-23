@@ -1,5 +1,6 @@
 import { Center, Text, VStack } from "native-base";
 import { rrulestr } from "rrule";
+import { t, Trans } from "@lingui/macro";
 
 import { NameAlias } from "../components/name-alias";
 // @ts-ignore
@@ -16,11 +17,20 @@ export const Info = ({ gathering }: Props) => {
   return (
     <Center>
       <VStack space="sm" textAlign="center">
-        {location ? <Text>Location: {location}</Text> : null}
-        {rrule.toText() ? <Text>Time: {rrule.toText()}</Text> : null}
+        {location ? (
+          <Text>
+            {t`Location:`} {location}
+          </Text>
+        ) : null}
+        {rrule.toText() ? (
+          <Text>
+            {t`Time:`} {rrule.toText()}
+          </Text>
+        ) : null}
         {leader ? (
           <Text>
-            Leader: <NameAlias name={leader.name} alias={leader.alias} />
+            <Trans>Leader:</Trans>{" "}
+            <NameAlias name={leader.name} alias={leader.alias} />
           </Text>
         ) : null}
       </VStack>

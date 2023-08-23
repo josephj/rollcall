@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Badge, Button, Box, Checkbox, HStack, Stack, Text } from "native-base";
+import { Trans } from "@lingui/macro";
 
 import { Card } from "../components";
 import { AttendanceMenu } from "./AttendanceMenu";
@@ -56,7 +57,7 @@ export const List = ({
   return (
     <Stack space="sm">
       <Box alignSelf="center" textAlign="center">
-        <Text>Attendances: {totalAttendances}</Text>
+        <Trans>Attendances: {totalAttendances}</Trans>
       </Box>
       <Controller
         name="attendanceMemberIds"
@@ -85,7 +86,7 @@ export const List = ({
                                 fontSize="11px"
                                 width="70px"
                               >
-                                <Text fontSize="11px">🎤 Host</Text>
+                                <Trans fontSize="11px">🎤 Host</Trans>
                               </Badge>
                             )}
                             {isMember && (
@@ -94,7 +95,7 @@ export const List = ({
                                 fontSize="11px"
                                 width="70px"
                               >
-                                <Text fontSize="11px">👤 Member</Text>
+                                <Trans fontSize="11px">👤 Member</Trans>
                               </Badge>
                             )}
                             {!isMember && (
@@ -103,7 +104,7 @@ export const List = ({
                                 fontSize="11px"
                                 width="70px"
                               >
-                                <Text fontSize="11px">👋 Visitor</Text>
+                                <Trans fontSize="11px">👋 Visitor</Trans>
                               </Badge>
                             )}
                           </Stack>
