@@ -1,4 +1,5 @@
-import { Alert, Flex, HStack, Text, InfoIcon } from "native-base";
+import { Alert, Flex, HStack, InfoIcon } from "native-base";
+import { Trans } from "@lingui/macro";
 
 import { Header } from "./Header";
 import { LoadingSpinner } from "./LoadingSpinner";
@@ -27,7 +28,7 @@ export const Layout = ({ headerContent, children, isLoading }) => {
           >
             <HStack space={2} alignItems="center">
               <InfoIcon color="blue.400" />
-              <Text flexGrow={1}>You are using the testing site.</Text>
+              <Trans flexGrow={1}>You are using the testing site.</Trans>
             </HStack>
           </Alert>
         )}

@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { Link, useParams } from "react-router-dom";
 import { Box, Center, FlatList, HStack, Stack, Text } from "native-base";
+import { t, Trans } from "@lingui/macro";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import "dayjs/locale/en";
 
@@ -28,16 +29,16 @@ export const WeeklyReport = () => {
     })) || [];
 
   return (
-    <Layout headerContent="Weekly Report" {...{ isLoading }}>
+    <Layout headerContent={t`Weekly Report`} {...{ isLoading }}>
       <Stack space="10">
         <Center>
           <Stack space="2">
             <HStack space="2">
-              <Text>From:</Text>
+              <Trans>From:</Trans>
               <Text>{startDateTime.format("LLLL")}</Text>
             </HStack>
             <HStack space="2">
-              <Text>To:</Text>
+              <Trans>To:</Trans>
               <Text>{endDateTime.format("LLLL")}</Text>
             </HStack>
           </Stack>
@@ -72,7 +73,7 @@ export const WeeklyReport = () => {
                                   {date}
                                 </Link>
                               </Text>
-                            )
+                            ),
                           )}
                         </HStack>
                         )
@@ -82,7 +83,7 @@ export const WeeklyReport = () => {
                 </HStack>
                 {!!item?.nextOccurrence?.host ? (
                   <HStack space="2xs" fontSize="xs">
-                    <Text fontWeight="semibold">Next host:</Text>
+                    <Text fontWeight="semibold">{t`Next host:`}</Text>
                     <Text>{item.nextOccurrence.host.name}</Text>
                     {!!item.nextOccurrence.host.alias && (
                       <Text>({item.nextOccurrence.host.alias})</Text>

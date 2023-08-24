@@ -9,6 +9,7 @@ import {
   useToast,
 } from "native-base";
 import Select from "react-select";
+import { t, Trans } from "@lingui/macro";
 
 import { useApi } from "./useApi";
 import { getNextDate } from "../../Gathering/utils";
@@ -62,7 +63,7 @@ export const NextOccurrence = ({ gathering }) => {
     <Center paddingBottom="lg">
       <VStack space="md" paddingBottom="lg">
         <Heading size="sm" textAlign="center">
-          Next occurrence
+          <Trans>Next occurrence</Trans>
         </Heading>
         <Stack
           textAlign="center"
@@ -71,7 +72,9 @@ export const NextOccurrence = ({ gathering }) => {
           padding="md"
         >
           <FormControl>
-            <FormControl.Label display="block">Date</FormControl.Label>
+            <FormControl.Label display="block">
+              <Trans>Date</Trans>
+            </FormControl.Label>
             <Center>
               <Link
                 href={`/${org}/gatherings/${slug}/${nextDate}`}
@@ -82,19 +85,21 @@ export const NextOccurrence = ({ gathering }) => {
             </Center>
           </FormControl>
           <FormControl>
-            <FormControl.Label display="block">Host</FormControl.Label>
+            <FormControl.Label display="block">
+              <Trans>Host</Trans>
+            </FormControl.Label>
             <Select
               defaultValue={value}
               isClearable
               isDisabled={isSaving}
               isLoading={isSaving}
               onChange={handleSetHost}
-              placeholder="Select a member..."
+              placeholder={t`Select a member...`}
               menuPlacement="top"
               {...{ options }}
             />
             <FormControl.HelperText>
-              Select the host for the next occurrence
+              <Trans>Select the host for the next occurrence</Trans>
             </FormControl.HelperText>
           </FormControl>
         </Stack>

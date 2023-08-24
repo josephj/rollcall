@@ -1,6 +1,7 @@
 import { gql, useQuery } from "@apollo/client";
 import { useParams, useNavigate } from "react-router-dom";
 import { Stack, Text } from "native-base";
+import { t } from "@lingui/macro";
 
 import { Card, Layout } from "./components";
 
@@ -24,7 +25,7 @@ export const Gatherings = () => {
   const gatherings = data?.allGathering || [];
 
   return (
-    <Layout headerContent="Gatherings" isLoading={loading}>
+    <Layout headerContent={t`Gatherings`} isLoading={loading}>
       <Stack space={5}>
         {gatherings.map(({ _id, title, name, slug }) => (
           <Card

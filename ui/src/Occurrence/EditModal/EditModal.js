@@ -1,12 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Select from "react-select";
 import { DayPicker } from "react-day-picker";
 import { format, parse } from "date-fns";
 import { Button, Center, Stack, HStack, Modal, FormControl } from "native-base";
+import { t, Trans } from "@lingui/macro";
 
 import "react-day-picker/dist/style.css";
 import "./style.css";
 import { useApi } from "./useApi";
+import { enAU, zhTW } from "date-fns/locale";
+import { getLocale } from "../../i18n";
 
 const DATE_FORMAT = "yyyy-MM-dd";
 
@@ -21,6 +24,7 @@ export const EditModal = ({ date, slug, isOpen = true, onClose, onSave }) => {
   const [selectedDay, setSelectedDay] = useState(initialDate);
   const [selectedHostMemberId, setSelectedHostMemberId] =
     useState(hostMemberId);
+  const locale = useRef(getLocale());
 
   useEffect(() => {
     setSelectedHostMemberId(hostMemberId);
@@ -65,32 +69,37 @@ export const EditModal = ({ date, slug, isOpen = true, onClose, onSave }) => {
     <Modal size="md" onClose={handleClose} {...{ isOpen }}>
       <Modal.Content>
         <Modal.CloseButton />
-        <Modal.Header>Edit occurrence</Modal.Header>
+        <Modal.Header>{t`Edit occurrence`}</Modal.Header>
         <Modal.Body>
           <Center>
             <Stack space="md">
               <FormControl isRequired>
-                <FormControl.Label>Date</FormControl.Label>
+                <FormControl.Label>
+                  <Trans>Date</Trans>
+                </FormControl.Label>
                 <DayPicker
                   mode="single"
                   disabled={disabledDays}
+                  locale={locale.current === "zh-TW" ? zhTW : enAU}
                   selected={selectedDay}
                   onSelect={setSelectedDay}
                   {...{ defaultMonth }}
                 />
                 <FormControl.HelperText>
-                  Select any dates that are not already used.
+                  {t`Select any dates that are not already used.`}
                 </FormControl.HelperText>
               </FormControl>
               <FormControl>
-                <FormControl.Label>Host</FormControl.Label>
+                <FormControl.Label>
+                  <Trans>Host</Trans>
+                </FormControl.Label>
                 <Select
                   isClearable
                   onChange={handleChangeHost}
                   {...{ options, value, isLoading }}
                 />
                 <FormControl.HelperText>
-                  Select the host for this occurrence.
+                  {t`Select the host for this occurrence.`}
                 </FormControl.HelperText>
               </FormControl>
             </Stack>
@@ -99,10 +108,10 @@ export const EditModal = ({ date, slug, isOpen = true, onClose, onSave }) => {
         <Modal.Footer>
           <HStack space="sm">
             <Button variant="ghost" onPress={handleClose}>
-              Cancel
+              {t`Cancel`}
             </Button>
             <Button isLoading={isSaving} onPress={handleSave}>
-              Save
+              {t`Save`}
             </Button>
           </HStack>
         </Modal.Footer>

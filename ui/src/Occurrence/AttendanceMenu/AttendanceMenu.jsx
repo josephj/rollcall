@@ -11,6 +11,7 @@ import {
   useDisclose,
   useToast,
 } from "native-base";
+import { t, Trans } from "@lingui/macro";
 
 import { useApi } from "./useApi";
 
@@ -42,8 +43,8 @@ export const AttendanceMenu = ({
     onUpdate();
     toast.show({
       description: isAttended
-        ? "The member is now a visitor"
-        : "The member is removed from the gathering",
+        ? t`The member is now a visitor`
+        : t`The member is removed from the gathering`,
       isClosable: true,
     });
   };
@@ -54,7 +55,7 @@ export const AttendanceMenu = ({
     setSaving(false);
     onUpdate();
     toast.show({
-      description: "The visitor is now a member",
+      description: t`The visitor is now a member`,
       isClosable: true,
     });
   };
@@ -65,7 +66,7 @@ export const AttendanceMenu = ({
     setSaving(false);
     onUpdate();
     toast.show({
-      description: "The attendance has been set to the occurrence host",
+      description: t`The attendance has been set to the occurrence host`,
       isClosable: true,
     });
   };
@@ -76,7 +77,7 @@ export const AttendanceMenu = ({
     setSaving(false);
     onUpdate();
     toast.show({
-      description: "The attendance has been removed from the host role",
+      description: t`The attendance has been removed from the host role`,
       isClosable: true,
     });
   };
@@ -98,24 +99,28 @@ export const AttendanceMenu = ({
         {isOpen && (
           <>
             {!isMember && (
-              <Menu.Item onPress={handleSetMember}>👤 Set as member</Menu.Item>
+              <Menu.Item onPress={handleSetMember}>
+                👤<Trans>Set as member</Trans>
+              </Menu.Item>
             )}
             {isMember && !isLeader && isAttended && (
               <Menu.Item onPress={handleSetVisitor}>
-                👋 Set as visitor
+                👋<Trans>Set as visitor</Trans>
               </Menu.Item>
             )}
             {!isHost && (
-              <Menu.Item onPress={handleSetHost}>🎤 Set as host</Menu.Item>
+              <Menu.Item onPress={handleSetHost}>
+                🎤<Trans>Set as host</Trans>
+              </Menu.Item>
             )}
             {isHost && (
               <Menu.Item onPress={handleUnsetHost}>
-                🔇 Remove the host role
+                🔇<Trans>Remove the host role</Trans>
               </Menu.Item>
             )}
             {isMember && !isLeader && !isAttended && (
               <Menu.Item onPress={() => setConfirmVisibility(true)}>
-                <Text color="red.500">🛑 Remove this member</Text>
+                ❌<Trans>Remove this member</Trans>
               </Menu.Item>
             )}
           </>
@@ -127,11 +132,19 @@ export const AttendanceMenu = ({
       >
         <Modal.Content maxH="212">
           <Modal.CloseButton />
-          <Modal.Header>Remove this member</Modal.Header>
+          <Modal.Header>
+            <Trans>Remove this member</Trans>
+          </Modal.Header>
           <Modal.Body>
             <Stack space="md" textAlign="center">
-              <Text>This member won't appear in the future occurrence.</Text>
-              <Text>Are you sure?</Text>
+              <Text>
+                <Trans>
+                  This member won't appear in the future occurrence.
+                </Trans>
+              </Text>
+              <Text>
+                <Trans>Are you sure?</Trans>
+              </Text>
             </Stack>
           </Modal.Body>
           <Modal.Footer>
@@ -140,14 +153,14 @@ export const AttendanceMenu = ({
                 variant="ghost"
                 onPress={() => setConfirmVisibility(false)}
               >
-                Cancel
+                <Trans>Cancel</Trans>
               </Button>
               <Button
                 colorScheme="red"
                 isLoading={isSaving}
                 onPress={handleSetVisitor}
               >
-                Yes
+                <Trans>Yes</Trans>
               </Button>
             </Button.Group>
           </Modal.Footer>

@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { Trans } from "@lingui/macro";
 
 import {
   Divider,
@@ -134,7 +135,11 @@ export const Occurrence = () => {
         <Text color="gray.300">&gt;</Text>
         <Text>{date}</Text>
         <Text fontSize="sm">
-          (<Link to={`/${org}/gatherings/${slug}/${date}/edit`}>Edit</Link>)
+          (
+          <Link to={`/${org}/gatherings/${slug}/${date}/edit`}>
+            <Trans>Edit Occurrence</Trans>
+          </Link>
+          )
         </Text>
       </HStack>
     );

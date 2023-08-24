@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { DayPicker } from "react-day-picker";
 import { format, parse } from "date-fns";
+import { enAU, zhTW } from "date-fns/locale";
 import { Button, HStack, Modal, Center } from "native-base";
+import { t } from "@lingui/macro";
 
 import { useApi } from "./useApi";
 
 import "react-day-picker/dist/style.css";
 import "./style.css";
 import { useNavigate, useParams } from "react-router-dom";
+import { getLocale } from "../../i18n";
 
 const DATE_FORMAT = "yyyy-MM-dd";
 
@@ -19,6 +22,7 @@ export const AddModal = ({ isOpen, onClose }) => {
   const initialDate = new Date();
   const defaultMonth = initialDate;
   const [selectedDay, setSelectedDay] = useState(initialDate);
+  const locale = useRef(getLocale());
 
   const handleCreate = async () => {
     setSaving(true);
@@ -40,19 +44,20 @@ export const AddModal = ({ isOpen, onClose }) => {
   }
 
   const disabledDays = usedDateStrings.map((usedDateString) =>
-    parse(usedDateString, DATE_FORMAT, new Date())
+    parse(usedDateString, DATE_FORMAT, new Date()),
   );
 
   return (
     <Modal size="md" onClose={handleClose} {...{ isOpen }}>
       <Modal.Content>
         <Modal.CloseButton />
-        <Modal.Header>Choose date</Modal.Header>
+        <Modal.Header>{t`Choose date`}</Modal.Header>
         <Modal.Body>
           <Center>
             <DayPicker
               mode="single"
               disabled={disabledDays}
+              locale={locale.current === "zh-TW" ? zhTW : enAU}
               selected={selectedDay}
               onSelect={setSelectedDay}
               {...{ defaultMonth }}
@@ -62,10 +67,10 @@ export const AddModal = ({ isOpen, onClose }) => {
         <Modal.Footer>
           <HStack space="sm">
             <Button variant="ghost" onPress={handleClose}>
-              Cancel
+              {t`Cancel`}
             </Button>
             <Button isLoading={isSaving} onPress={handleCreate}>
-              Create
+              {t`Create`}
             </Button>
           </HStack>
         </Modal.Footer>
