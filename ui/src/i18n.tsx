@@ -13,9 +13,9 @@ import {
 const DEFAULT_LOCALE = "zh-TW";
 const LANGUAGE_KEY = "lang";
 
-const AVAILABLE_LOCALES = {
+export const AVAILABLE_LOCALES = {
   en: "English",
-  "zh-TW": "Traditional Chinese",
+  "zh-TW": "繁體中文",
 };
 
 export const getLocale = () => {
