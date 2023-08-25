@@ -31,9 +31,15 @@ const query = groq`
 export const useApi = ({ startDate, endDate }) => {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState();
+  console.log("=>(useApi.js:50) outside startDate", startDate);
+  console.log("=>(useApi.js:51) outside endDate", endDate);
 
   const loadData = useCallback(async () => {
     setLoading(true);
+
+    console.log("=>(useApi.js:50) startDate", startDate);
+    console.log("=>(useApi.js:51) endDate", endDate);
+
     try {
       const rawData = await sanityClient.fetch(query, {
         startDate,
@@ -58,7 +64,7 @@ export const useApi = ({ startDate, endDate }) => {
         const gathering = mapGathering({
           ...rawGathering,
           occurrences: rawGathering.occurrences.filter(({ date }) =>
-            occurrenceDates.includes(date)
+            occurrenceDates.includes(date),
           ),
         });
 
@@ -81,7 +87,7 @@ export const useApi = ({ startDate, endDate }) => {
 
   useEffect(() => {
     loadData();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [loadData]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return { data, isLoading };
 };

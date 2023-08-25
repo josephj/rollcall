@@ -67,6 +67,10 @@ const router = createBrowserRouter([
     path: "/:org/weekly-report",
     element: <WeeklyReport />,
   },
+  {
+    path: "/:org/weekly-report/:startDate",
+    element: <WeeklyReport />,
+  },
 ]);
 
 const rootEl = document.getElementById("root");

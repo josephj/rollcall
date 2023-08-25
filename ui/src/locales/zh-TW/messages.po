@@ -49,10 +49,10 @@ msgstr "出席人數：{totalAttendances}"
 msgid "Attendee:"
 msgstr "參加者："
 
-#: src/Gathering/AddModal/AddModal.js:66
+#: src/Gathering/AddModal/AddModal.js:70
 #: src/Occurrence/AddMemberModal.js:189
 #: src/Occurrence/AttendanceMenu/AttendanceMenu.jsx:156
-#: src/Occurrence/EditModal/EditModal.js:109
+#: src/Occurrence/EditModal/EditModal.js:111
 msgid "Cancel"
 msgstr "取消"
 
@@ -60,11 +60,11 @@ msgstr "取消"
 msgid "Chinese name (e.g. 王耀輝)"
 msgstr "中文名字（例如：王耀輝）"
 
-#: src/Gathering/AddModal/AddModal.js:51
+#: src/Gathering/AddModal/AddModal.js:54
 msgid "Choose date"
 msgstr "選擇將要建立的聚會日期"
 
-#: src/Gathering/AddModal/AddModal.js:69
+#: src/Gathering/AddModal/AddModal.js:73
 msgid "Create"
 msgstr "建立"
 
@@ -72,7 +72,7 @@ msgstr "建立"
 msgid "Create \"{inputValue}\""
 msgstr "👉 點選建立「{inputValue}」成為新會員..."
 
-#: src/Occurrence/EditModal/EditModal.js:77
+#: src/Occurrence/EditModal/EditModal.js:78
 #: src/Occurrence/NextOccurrence/NextOccurrence.js:76
 msgid "Date"
 msgstr "日期"
@@ -81,7 +81,7 @@ msgstr "日期"
 msgid "e.g. abc@gmail.com"
 msgstr "例如： abc@gmail.com"
 
-#: src/Occurrence/EditModal/EditModal.js:70
+#: src/Occurrence/EditModal/EditModal.js:72
 msgid "Edit occurrence"
 msgstr "設定此次聚會"
 
@@ -97,7 +97,7 @@ msgstr "英文名字（例如： Jeffrey Wang）"
 msgid "Established"
 msgstr "已建立的聚會"
 
-#: src/WeeklyReport/WeeklyReport.js:37
+#: src/WeeklyReport/WeeklyReport.js:49
 msgid "From:"
 msgstr "開始時間："
 
@@ -107,11 +107,11 @@ msgstr "開始時間："
 msgid "Gatherings"
 msgstr "小組列表"
 
-#: src/components/Header.jsx:49
+#: src/components/Header.jsx:66
 msgid "Home"
 msgstr "首頁"
 
-#: src/Occurrence/EditModal/EditModal.js:92
+#: src/Occurrence/EditModal/EditModal.js:94
 #: src/Occurrence/NextOccurrence/NextOccurrence.js:89
 msgid "Host"
 msgstr "主領"
@@ -137,7 +137,7 @@ msgstr "設為組員"
 msgid "Name"
 msgstr "名字"
 
-#: src/WeeklyReport/WeeklyReport.js:86
+#: src/WeeklyReport/WeeklyReport.js:99
 msgid "Next host:"
 msgstr "下次聚會主領："
 
@@ -145,9 +145,17 @@ msgstr "下次聚會主領："
 msgid "Next occurrence"
 msgstr "下次聚會"
 
+#: src/WeeklyReport/WeeklyReport.js:121
+msgid "Next week"
+msgstr "下一週 ≫"
+
 #: src/Gathering/List.js:34
 msgid "Not Established"
 msgstr "尚未建立的聚會日期"
+
+#: src/WeeklyReport/WeeklyReport.js:117
+msgid "Previous week"
+msgstr "≪ 上一週"
 
 #: src/Occurrence/AttendanceMenu/AttendanceMenu.jsx:118
 msgid "Remove the host role"
@@ -159,7 +167,7 @@ msgid "Remove this member"
 msgstr "移除組員"
 
 #: src/Occurrence/AddMemberModal.js:199
-#: src/Occurrence/EditModal/EditModal.js:112
+#: src/Occurrence/EditModal/EditModal.js:114
 msgid "Save"
 msgstr "儲存"
 
@@ -171,7 +179,7 @@ msgstr "將此參與者直接設定為組員"
 msgid "Select a member..."
 msgstr "選擇一位組員..."
 
-#: src/Occurrence/EditModal/EditModal.js:87
+#: src/Occurrence/EditModal/EditModal.js:89
 msgid "Select any dates that are not already used."
 msgstr "請選擇任何尚未被建立的日期"
 
@@ -187,7 +195,7 @@ msgstr "請選擇或輸入人名..."
 msgid "Select the host for the next occurrence"
 msgstr "選擇下次聚會的主領"
 
-#: src/Occurrence/EditModal/EditModal.js:100
+#: src/Occurrence/EditModal/EditModal.js:102
 msgid "Select the host for this occurrence."
 msgstr "選擇主持本次聚會的組員為主領"
 
@@ -231,12 +239,12 @@ msgstr "此人將不會出現在未來的小組聚會中。"
 msgid "Time:"
 msgstr "聚會時間："
 
-#: src/WeeklyReport/WeeklyReport.js:41
+#: src/WeeklyReport/WeeklyReport.js:53
 msgid "To:"
 msgstr "結束時間："
 
-#: src/components/Header.jsx:58
-#: src/WeeklyReport/WeeklyReport.js:32
+#: src/components/Header.jsx:75
+#: src/WeeklyReport/WeeklyReport.js:44
 msgid "Weekly Report"
 msgstr "本週報表"
 

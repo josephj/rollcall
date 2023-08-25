@@ -49,10 +49,10 @@ msgstr "Attendances: {totalAttendances}"
 msgid "Attendee:"
 msgstr "Attendee:"
 
-#: src/Gathering/AddModal/AddModal.js:66
+#: src/Gathering/AddModal/AddModal.js:70
 #: src/Occurrence/AddMemberModal.js:189
 #: src/Occurrence/AttendanceMenu/AttendanceMenu.jsx:156
-#: src/Occurrence/EditModal/EditModal.js:109
+#: src/Occurrence/EditModal/EditModal.js:111
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -60,11 +60,11 @@ msgstr "Cancel"
 msgid "Chinese name (e.g. 王耀輝)"
 msgstr "Chinese name (e.g. 王耀輝)"
 
-#: src/Gathering/AddModal/AddModal.js:51
+#: src/Gathering/AddModal/AddModal.js:54
 msgid "Choose date"
 msgstr "Choose date"
 
-#: src/Gathering/AddModal/AddModal.js:69
+#: src/Gathering/AddModal/AddModal.js:73
 msgid "Create"
 msgstr "Create"
 
@@ -72,7 +72,7 @@ msgstr "Create"
 msgid "Create \"{inputValue}\""
 msgstr "Create \"{inputValue}\""
 
-#: src/Occurrence/EditModal/EditModal.js:77
+#: src/Occurrence/EditModal/EditModal.js:78
 #: src/Occurrence/NextOccurrence/NextOccurrence.js:76
 msgid "Date"
 msgstr "Date"
@@ -81,7 +81,7 @@ msgstr "Date"
 msgid "e.g. abc@gmail.com"
 msgstr "e.g. abc@gmail.com"
 
-#: src/Occurrence/EditModal/EditModal.js:70
+#: src/Occurrence/EditModal/EditModal.js:72
 msgid "Edit occurrence"
 msgstr "Edit occurrence"
 
@@ -97,7 +97,7 @@ msgstr "English name (e.g. Jeffrey Wang)"
 msgid "Established"
 msgstr "Established"
 
-#: src/WeeklyReport/WeeklyReport.js:37
+#: src/WeeklyReport/WeeklyReport.js:49
 msgid "From:"
 msgstr "From:"
 
@@ -107,11 +107,11 @@ msgstr "From:"
 msgid "Gatherings"
 msgstr "Gatherings"
 
-#: src/components/Header.jsx:49
+#: src/components/Header.jsx:66
 msgid "Home"
 msgstr "Home"
 
-#: src/Occurrence/EditModal/EditModal.js:92
+#: src/Occurrence/EditModal/EditModal.js:94
 #: src/Occurrence/NextOccurrence/NextOccurrence.js:89
 msgid "Host"
 msgstr "Host"
@@ -141,7 +141,7 @@ msgstr "Member"
 msgid "Name"
 msgstr "Name"
 
-#: src/WeeklyReport/WeeklyReport.js:86
+#: src/WeeklyReport/WeeklyReport.js:99
 msgid "Next host:"
 msgstr "Next host:"
 
@@ -149,9 +149,17 @@ msgstr "Next host:"
 msgid "Next occurrence"
 msgstr "Next occurrence"
 
+#: src/WeeklyReport/WeeklyReport.js:121
+msgid "Next week"
+msgstr "Next week"
+
 #: src/Gathering/List.js:34
 msgid "Not Established"
 msgstr "Not Established"
+
+#: src/WeeklyReport/WeeklyReport.js:117
+msgid "Previous week"
+msgstr "Previous week"
 
 #: src/Occurrence/AttendanceMenu/AttendanceMenu.jsx:118
 msgid "Remove the host role"
@@ -163,7 +171,7 @@ msgid "Remove this member"
 msgstr "Remove this member"
 
 #: src/Occurrence/AddMemberModal.js:199
-#: src/Occurrence/EditModal/EditModal.js:112
+#: src/Occurrence/EditModal/EditModal.js:114
 msgid "Save"
 msgstr "Save"
 
@@ -175,7 +183,7 @@ msgstr "Save the attendee as gathering member"
 msgid "Select a member..."
 msgstr "Select a member..."
 
-#: src/Occurrence/EditModal/EditModal.js:87
+#: src/Occurrence/EditModal/EditModal.js:89
 msgid "Select any dates that are not already used."
 msgstr "Select any dates that are not already used."
 
@@ -191,7 +199,7 @@ msgstr "Select or create a new attendee"
 msgid "Select the host for the next occurrence"
 msgstr "Select the host for the next occurrence"
 
-#: src/Occurrence/EditModal/EditModal.js:100
+#: src/Occurrence/EditModal/EditModal.js:102
 msgid "Select the host for this occurrence."
 msgstr "Select the host for this occurrence."
 
@@ -235,12 +243,12 @@ msgstr "This member won't appear in the future occurrence."
 msgid "Time:"
 msgstr "Time:"
 
-#: src/WeeklyReport/WeeklyReport.js:41
+#: src/WeeklyReport/WeeklyReport.js:53
 msgid "To:"
 msgstr "To:"
 
-#: src/components/Header.jsx:58
-#: src/WeeklyReport/WeeklyReport.js:32
+#: src/components/Header.jsx:75
+#: src/WeeklyReport/WeeklyReport.js:44
 msgid "Weekly Report"
 msgstr "Weekly Report"
 

@@ -1,6 +1,14 @@
 import dayjs from "dayjs";
 import { Link, useParams } from "react-router-dom";
-import { Box, Center, FlatList, HStack, Stack, Text } from "native-base";
+import {
+  Box,
+  Center,
+  Divider,
+  FlatList,
+  HStack,
+  Stack,
+  Text,
+} from "native-base";
 import { t, Trans } from "@lingui/macro";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 import "dayjs/locale/en";
@@ -13,14 +21,19 @@ dayjs.extend(localizedFormat);
 dayjs.locale("en");
 
 export const WeeklyReport = () => {
-  const { org } = useParams();
-  const { startDateTime, endDateTime } = getReportStartEndDateTimes();
+  const { org, startDate: paramStartDate } = useParams();
+  const { startDateTime, endDateTime } =
+    getReportStartEndDateTimes(paramStartDate);
   const startDate = startDateTime.format("YYYY-MM-DD");
   const endDate = endDateTime.format("YYYY-MM-DD");
   const { data, isLoading } = useApi({
     startDate,
     endDate,
   });
+
+  const prevStartDate = startDateTime.subtract(1, "week").format("YYYY-MM-DD");
+  const nextStartDate = startDateTime.add(1, "week").format("YYYY-MM-DD");
+  const isNextWeekDisabled = dayjs(nextStartDate) > dayjs();
 
   const gatherings =
     data?.map((item) => ({
@@ -30,7 +43,7 @@ export const WeeklyReport = () => {
 
   return (
     <Layout headerContent={t`Weekly Report`} {...{ isLoading }}>
-      <Stack space="10">
+      <Stack space="lg">
         <Center>
           <Stack space="2">
             <HStack space="2">
@@ -43,6 +56,7 @@ export const WeeklyReport = () => {
             </HStack>
           </Stack>
         </Center>
+
         <FlatList
           data={gatherings}
           renderItem={({ index, item }) => (
@@ -96,6 +110,23 @@ export const WeeklyReport = () => {
             </HStack>
           )}
         />
+        <Divider />
+        <Center>
+          <HStack alignItems="center" fontSize="sm" space="md">
+            <Link
+              to={`/${org}/weekly-report/${prevStartDate}`}
+            >{t`Previous week`}</Link>
+            <Divider orientation="vertical" />
+            {isNextWeekDisabled ? (
+              <Text color="gray.500">{t`Next week`}</Text>
+            ) : (
+              <Link
+                isDisabled={isNextWeekDisabled}
+                to={`/${org}/weekly-report/${nextStartDate}`}
+              >{t`Next week`}</Link>
+            )}
+          </HStack>
+        </Center>
       </Stack>
     </Layout>
   );
