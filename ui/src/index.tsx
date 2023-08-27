@@ -1,80 +1,80 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import { ApolloProvider } from "@apollo/client";
-import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import { ApolloProvider } from '@apollo/client'
+import { ApolloClient, InMemoryCache } from '@apollo/client'
 
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { NativeBaseProvider } from "native-base";
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { NativeBaseProvider } from 'native-base'
 
-import { App } from "./App";
-import { Gatherings } from "./Gatherings";
-import { Gathering } from "./Gathering";
-import { Occurrence } from "./Occurrence";
-import { WeeklyReport } from "./WeeklyReport";
-import { I18nApp } from "./i18n";
-import reportWebVitals from "./reportWebVitals";
-import "./index.css";
+import { App } from './App'
+import { Gatherings } from './Gatherings'
+import { Gathering } from './Gathering'
+import { Occurrence } from './Occurrence'
+import { WeeklyReport } from './WeeklyReport'
+import { I18nApp } from './i18n'
+import reportWebVitals from './reportWebVitals'
+import './index.css'
 
-const env = process.env.REACT_APP_DATA_SET || "development";
+const env = process.env.REACT_APP_DATA_SET || 'development'
 
 export const client = new ApolloClient({
   uri: `https://5wmwst53.api.sanity.io/v1/graphql/${env}/default`,
   cache: new InMemoryCache(),
-});
+})
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <App />,
   },
   {
-    path: "/:org",
+    path: '/:org',
     element: <Gatherings />,
   },
   {
-    path: "/:org/gatherings",
+    path: '/:org/gatherings',
     element: <Gatherings />,
   },
   {
-    path: "/organization/:org/gatherings",
+    path: '/organization/:org/gatherings',
     element: <Gatherings />,
   },
   {
-    path: "/:org/gatherings/:slug",
+    path: '/:org/gatherings/:slug',
     element: <Gathering />,
   },
   {
-    path: "/organization/:org/gatherings/:slug",
+    path: '/organization/:org/gatherings/:slug',
     element: <Gathering />,
   },
   {
-    path: "/:org/gatherings/:slug/:date",
+    path: '/:org/gatherings/:slug/:date',
     element: <Occurrence />,
   },
   {
-    path: "/organization/:org/gatherings/:slug/:date",
+    path: '/organization/:org/gatherings/:slug/:date',
     element: <Occurrence />,
   },
   {
-    path: "/:org/gatherings/:slug/:date/:action",
+    path: '/:org/gatherings/:slug/:date/:action',
     element: <Occurrence />,
   },
   {
-    path: "/organization/:org/gatherings/:slug/:date/:action",
+    path: '/organization/:org/gatherings/:slug/:date/:action',
     element: <Occurrence />,
   },
   {
-    path: "/:org/weekly-report",
+    path: '/:org/weekly-report',
     element: <WeeklyReport />,
   },
   {
-    path: "/:org/weekly-report/:startDate",
+    path: '/:org/weekly-report/:startDate',
     element: <WeeklyReport />,
   },
-]);
+])
 
-const rootEl = document.getElementById("root");
-const root = createRoot(rootEl!);
+const rootEl = document.getElementById('root')
+const root = createRoot(rootEl!)
 root.render(
   <StrictMode>
     <ApolloProvider {...{ client }}>
@@ -84,10 +84,10 @@ root.render(
         </NativeBaseProvider>
       </I18nApp>
     </ApolloProvider>
-  </StrictMode>,
-);
+  </StrictMode>
+)
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+reportWebVitals()

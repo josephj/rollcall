@@ -1,22 +1,14 @@
-import groq from "groq";
-import { useState, useEffect } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import {
-  AddIcon,
-  Fab,
-  HStack,
-  Skeleton,
-  Stack,
-  Text,
-  useDisclose,
-} from "native-base";
-import { t } from "@lingui/macro";
+import groq from 'groq'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { AddIcon, Fab, HStack, Skeleton, Stack, Text, useDisclose } from 'native-base'
+import { t } from '@lingui/macro'
 
-import { Layout } from "../components";
-import { sanityClient } from "../sanityClient";
-import { Info } from "./Info";
-import { List } from "./List";
-import { AddModal } from "./AddModal";
+import { Layout } from '../components'
+import { sanityClient } from '../sanityClient'
+import { Info } from './Info'
+import { List } from './List'
+import { AddModal } from './AddModal'
 
 const query = groq`
   *[_type == "gathering" && slug.current == $slug][0] {
@@ -36,7 +28,7 @@ const query = groq`
       alias,
     }
   }
-`;
+`
 
 const queryOccurrenceDate = groq`
   *[_type == "gathering" && slug.current == $slug][0] {
@@ -44,48 +36,48 @@ const queryOccurrenceDate = groq`
       _key
     }
   }
-`;
+`
 
 export const Gathering = () => {
-  const { org, slug } = useParams();
-  const [gathering, setGathering] = useState();
-  const navigate = useNavigate();
-  const { isOpen, onOpen, onClose } = useDisclose();
+  const { org, slug } = useParams()
+  const [gathering, setGathering] = useState()
+  const navigate = useNavigate()
+  const { isOpen, onOpen, onClose } = useDisclose()
 
   useEffect(() => {
     const loadGathering = async () => {
       try {
-        const gathering = await sanityClient.fetch(query, { slug });
-        setGathering(gathering);
+        const gathering = await sanityClient.fetch(query, { slug })
+        setGathering(gathering)
       } catch (e) {
-        console.error(e.message);
+        console.error(e.message)
       }
-    };
-    loadGathering();
-  }, [slug]);
+    }
+    loadGathering()
+  }, [slug])
 
-  const { _id, title } = gathering || {};
+  const { _id, title } = gathering || {}
 
   const handleCreate = async (date) => {
     const { occurrence } = await sanityClient.fetch(queryOccurrenceDate, {
       slug,
       date,
-    });
+    })
 
     if (!occurrence) {
       await sanityClient
         .patch(_id)
         .setIfMissing({ occurrences: [] })
-        .append("occurrences", [{ date, attendances: [], _type: "occurrence" }])
-        .commit({ autoGenerateArrayKeys: true });
+        .append('occurrences', [{ date, attendances: [], _type: 'occurrence' }])
+        .commit({ autoGenerateArrayKeys: true })
     }
 
-    navigate(`/${org}/gatherings/${slug}/${date}`);
-  };
+    navigate(`/${org}/gatherings/${slug}/${date}`)
+  }
 
   const handleEdit = (date) => {
-    navigate(`/${org}/gatherings/${slug}/${date}`);
-  };
+    navigate(`/${org}/gatherings/${slug}/${date}`)
+  }
 
   const renderHeaderContent = () => {
     if (!title) {
@@ -97,7 +89,7 @@ export const Gathering = () => {
           <Text color="gray.300">&gt;</Text>
           <Skeleton w="100" h="5" rounded="sm" my="1" endColor="gray.200" />
         </HStack>
-      );
+      )
     }
 
     return (
@@ -106,19 +98,15 @@ export const Gathering = () => {
         <Text color="gray.300">&gt;</Text>
         <Text>{title}</Text>
       </HStack>
-    );
-  };
+    )
+  }
 
   return (
     <>
       <Layout headerContent={renderHeaderContent()} isLoading={!gathering}>
         <Stack space={5}>
           {gathering ? <Info {...{ gathering }} /> : null}
-          <List
-            onCreate={handleCreate}
-            onEdit={handleEdit}
-            {...{ gathering }}
-          />
+          <List onCreate={handleCreate} onEdit={handleEdit} {...{ gathering }} />
         </Stack>
         <Fab
           colorScheme="blue"
@@ -131,5 +119,5 @@ export const Gathering = () => {
       </Layout>
       <AddModal {...{ isOpen, onClose, slug }} />
     </>
-  );
-};
+  )
+}
