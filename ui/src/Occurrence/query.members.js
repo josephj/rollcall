@@ -1,4 +1,4 @@
-import groq from "groq";
+import groq from 'groq'
 
 export const membersQuery = groq`
   *[_type == "member" 
@@ -8,4 +8,4 @@ export const membersQuery = groq`
     name,
     alias,
   }
-`;
+`

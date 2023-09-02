@@ -1,12 +1,20 @@
 module.exports = {
+  parserOptions: {
+    ecmaVersion: 11,
+    sourceType: 'module',
+  },
   env: {
     browser: true,
+    commonjs: true,
     es6: true,
     node: true,
+    jest: true,
   },
+  extends: ['plugin:import/errors', 'plugin:import/warnings', 'plugin:import/typescript'],
+  ignorePatterns: ['**/build/*', '**/dist/*', '*.d.ts'],
   rules: {
-    // 'import/no-unresolved': 'warn',
-    // 'import/named': 'warn',
+    'import/no-unresolved': 'warn',
+    'import/named': 'warn',
     'arrow-body-style': ['error', 'as-needed'],
     semi: ['error', 'never'],
     'brace-style': ['error', '1tbs', { allowSingleLine: false }],
@@ -38,11 +46,11 @@ module.exports = {
         ignoreTemplateLiterals: true,
       },
     ],
-    'no-console': 'error',
+    'no-console': ['error', { allow: ['error'] }],
     'no-debugger': 'error',
     'no-throw-literal': 'error',
     'no-restricted-syntax': ['error'],
-    'no-underscore-dangle': ['error', { allow: ['__ENV', '__typename'] }],
+    'no-underscore-dangle': ['error', { allow: ['__ENV', '__typename', '_id', '_key', '_type', '_ref'] }],
     'no-use-before-define': ['error'],
     'object-curly-newline': ['error', { consistent: true }],
     'prefer-destructuring': ['error'],
@@ -52,12 +60,18 @@ module.exports = {
   overrides: [
     {
       files: ['ui/src/**/*'],
-      extends: ['plugin:react/recommended'],
-      plugins: ['react', 'react-hooks'],
+      plugins: ['react', 'react-hooks', 'import'],
       settings: {
         react: {
-          version: '17.0.2',
+          version: 'detect',
         },
+      },
+      parserOptions: {
+        ecmaVersion: 11,
+        ecmaFeatures: {
+          jsx: true,
+        },
+        sourceType: 'module',
       },
       rules: {
         'react/default-props-match-prop-types': ['error'],
@@ -93,6 +107,22 @@ module.exports = {
         'import/no-default-export': 'warn',
         'react-hooks/rules-of-hooks': 'error',
         'react-hooks/exhaustive-deps': 'warn',
+      },
+    },
+    {
+      files: ['**/*.ts', '**/*.tsx'],
+      parser: '@typescript-eslint/parser',
+      plugins: ['@typescript-eslint'],
+      extends: ['plugin:@typescript-eslint/recommended'],
+      rules: {
+        'no-use-before-define': 'off',
+        '@typescript-eslint/no-unused-vars': 'error',
+        '@typescript-eslint/no-use-before-define': 'error',
+        '@typescript-eslint/ban-ts-comment': 'off',
+        '@typescript-eslint/no-explicit-any': 'error',
+        '@typescript-eslint/no-non-null-assertion': 'error',
+        '@typescript-eslint/consistent-type-imports': 'error',
+        '@typescript-eslint/method-signature-style': ['error', 'method'],
       },
     },
   ],

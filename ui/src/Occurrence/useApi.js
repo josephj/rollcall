@@ -1,29 +1,29 @@
-import { useCallback } from "react";
+import groq from 'groq'
+import { useCallback } from 'react'
 
-import { sanityClient } from "../sanityClient";
-import { occurrenceQuery } from "./query.occurrence";
-import groq from "groq";
+import { occurrenceQuery } from './query.occurrence'
+import { sanityClient } from '../sanityClient'
 
 export const useApi = ({ date, slug }) => {
   const addMember = useCallback(({ memberId, gatheringId }) => {
     sanityClient
       .patch(memberId)
-      .append("gatherings", [{ _ref: gatheringId, _type: "reference" }])
-      .commit({ autoGenerateArrayKeys: true });
-  }, []);
+      .append('gatherings', [{ _ref: gatheringId, _type: 'reference' }])
+      .commit({ autoGenerateArrayKeys: true })
+  }, [])
 
   const createMember = useCallback(
     async ({ name, alias, email, organizationId }) =>
       sanityClient.create({
-        _type: "member",
+        _type: 'member',
         alias,
         email,
         gatherings: [],
         name,
-        organization: { _ref: organizationId, _type: "reference" },
+        organization: { _ref: organizationId, _type: 'reference' },
       }),
     []
-  );
+  )
 
   const fetchOccurrence = useCallback(
     async () =>
@@ -32,102 +32,90 @@ export const useApi = ({ date, slug }) => {
         slug,
       }),
     [date, slug]
-  );
+  )
 
-  const updateAttendances = useCallback(
-    async ({ gatheringId, occurrenceKey, attendanceMemberIds }) => {
-      const attendances = attendanceMemberIds.map((memberId) => ({
-        _type: "attendance",
-        member: {
-          _ref: memberId,
-          _type: "reference",
-        },
-      }));
-
-      return sanityClient
-        .patch(gatheringId)
-        .set({
-          [`occurrences[_key == "${occurrenceKey}"].attendances`]: attendances,
-        })
-        .commit({ autoGenerateArrayKeys: true });
-    },
-    []
-  );
-
-  const tickAttendance = async ({ gatheringId, occurrenceKey, memberId }) => {
-    const { occurrences = [] } = await fetchOccurrence();
-    const { attendances = [] } = occurrences[0];
-    const isTicked = attendances.some(({ member }) => member._ref === memberId);
-    if (isTicked) return;
-
-    const attendanceData = {
-      _type: "attendance",
+  const updateAttendances = useCallback(async ({ gatheringId, occurrenceKey, attendanceMemberIds }) => {
+    const attendances = attendanceMemberIds.map((memberId) => ({
+      _type: 'attendance',
       member: {
         _ref: memberId,
-        _type: "reference",
+        _type: 'reference',
       },
-    };
+    }))
 
     return sanityClient
       .patch(gatheringId)
-      .append(`occurrences[_key == "${occurrenceKey}"].attendances`, [
-        attendanceData,
-      ])
-      .commit({ autoGenerateArrayKeys: true });
-  };
+      .set({
+        [`occurrences[_key == "${occurrenceKey}"].attendances`]: attendances,
+      })
+      .commit({ autoGenerateArrayKeys: true })
+  }, [])
 
-  const untickAttendance = async ({
-    gatheringId,
-    occurrenceKey,
-    attendanceKey,
-  }) => {
-    const { occurrences = [] } = await fetchOccurrence();
-    const { attendances = [] } = occurrences[0];
-    const isTicked = attendances.some(({ _key }) => _key === attendanceKey);
-    if (!isTicked) return;
+  const tickAttendance = async ({ gatheringId, occurrenceKey, memberId }) => {
+    const { occurrences = [] } = await fetchOccurrence()
+    const [{ attendances = [] }] = occurrences
+    const isTicked = attendances.some(({ member }) => member._ref === memberId)
+    if (isTicked) {
+      return
+    }
+
+    const attendanceData = {
+      _type: 'attendance',
+      member: {
+        _ref: memberId,
+        _type: 'reference',
+      },
+    }
 
     return sanityClient
       .patch(gatheringId)
-      .unset([
-        `occurrences[_key=="${occurrenceKey}"].attendances[_key=="${attendanceKey}"]`,
-      ])
-      .commit();
-  };
+      .append(`occurrences[_key == "${occurrenceKey}"].attendances`, [attendanceData])
+      .commit({ autoGenerateArrayKeys: true })
+  }
 
-  const updateOccurrence = async ({
-    gatheringId,
-    prevDate,
-    nextDate,
-    hostMemberId,
-  }) => {
-    const query = groq` *[_type == "gathering" && slug.current == $slug][0] { occurrences }`;
+  const untickAttendance = async ({ gatheringId, occurrenceKey, attendanceKey }) => {
+    const { occurrences = [] } = await fetchOccurrence()
+    const [{ attendances = [] }] = occurrences
+    const isTicked = attendances.some(({ _key }) => _key === attendanceKey)
+    if (!isTicked) {
+      return
+    }
+
+    return sanityClient
+      .patch(gatheringId)
+      .unset([`occurrences[_key=="${occurrenceKey}"].attendances[_key=="${attendanceKey}"]`])
+      .commit()
+  }
+
+  const updateOccurrence = async ({ gatheringId, prevDate, nextDate, hostMemberId }) => {
+    const query = groq` *[_type == "gathering" && slug.current == $slug][0] { occurrences }`
     const { occurrences } = await sanityClient.fetch(query, {
       slug,
-    });
+    })
 
-    const currentOccurrence = occurrences.find(({ date }) => date === prevDate);
-    const currentOccurrenceKey = currentOccurrence._key;
-    const dates = occurrences.map(({ date }) => date);
-    const isValid = !dates.includes(nextDate);
+    const currentOccurrence = occurrences.find(({ date }) => date === prevDate)
+    const currentOccurrenceKey = currentOccurrence._key
+    const dates = occurrences.map(({ date }) => date)
+    const isValid = !dates.includes(nextDate)
     if (isValid) {
       await sanityClient
         .patch(gatheringId)
         .set({
           [`occurrences[_key == "${currentOccurrenceKey}"].date`]: nextDate,
         })
-        .commit();
+        .commit()
     }
 
     await sanityClient
       .patch(gatheringId)
       .set({
         [`occurrences[_key == "${currentOccurrenceKey}"].host`]: {
-          _type: "reference",
+          _type: 'reference',
           _ref: hostMemberId,
         },
       })
-      .commit();
-  };
+      .commit()
+  }
 
   return {
     addMember,
@@ -137,5 +125,5 @@ export const useApi = ({ date, slug }) => {
     untickAttendance,
     updateAttendances,
     updateOccurrence,
-  };
-};
+  }
+}

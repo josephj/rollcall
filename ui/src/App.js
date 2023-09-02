@@ -46,7 +46,7 @@ export const App = () => {
       <Flex height="100%" justifyContent="center">
         <Stack space={5}>
           {organizations.map(({ _id, slug, name }) => (
-            <Card key={_id} textAlign="center" minWidth="250px" onClick={() => handleClick(slug.current)}>
+            <Card key={_id} minWidth="250px" onClick={() => handleClick(slug.current)} textAlign="center">
               <Text fontWeight="400">{name}</Text>
             </Card>
           ))}
@@ -55,5 +55,3 @@ export const App = () => {
     </Layout>
   )
 }
-
-export default App

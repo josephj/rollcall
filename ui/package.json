@@ -41,13 +41,8 @@
     "test": "react-app-rewired test --env=jsdom",
     "eject": "react-scripts eject",
     "extract": "lingui extract",
-    "compile": "lingui compile"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "compile": "lingui compile",
+    "graphql:schema": "get-graphql-schema https://5wmwst53.api.sanity.io/v1/graphql/production/default > schema.graphql"
   },
   "browserslist": {
     "production": [
@@ -68,6 +63,7 @@
     "@lingui/macro": "^4.4.0",
     "babel-plugin-macros": "^3.1.0",
     "customize-cra": "^1.0.0",
+    "get-graphql-schema": "^2.1.2",
     "react-app-rewired": "^2.2.1"
   }
 }

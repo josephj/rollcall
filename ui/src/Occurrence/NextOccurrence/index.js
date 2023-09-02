@@ -1,1 +1,1 @@
-export * from "./NextOccurrence";
+export * from './NextOccurrence'

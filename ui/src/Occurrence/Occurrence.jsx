@@ -1,109 +1,94 @@
-import { useCallback, useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { Trans } from "@lingui/macro";
+import { Trans } from '@lingui/macro'
+import { Divider, HStack, Stack, Skeleton, Text, useDisclose } from 'native-base'
+import { useCallback, useEffect, useState } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
-import {
-  Divider,
-  HStack,
-  Stack,
-  Skeleton,
-  Text,
-  useDisclose,
-} from "native-base";
-
-import { Layout } from "../components";
-import { AddMemberModal } from "./AddMemberModal";
-import { List } from "./List";
-import { AddButton } from "./Elements";
-import { useApi } from "./useApi";
-import { sanityClient } from "../sanityClient";
-import { EditModal } from "./EditModal/";
-import { NextOccurrence } from "./NextOccurrence";
+import { AddMemberModal } from './AddMemberModal'
+import { EditModal } from './EditModal/'
+import { AddButton } from './Elements'
+import { List } from './List'
+import { NextOccurrence } from './NextOccurrence'
+import { useApi } from './useApi'
+import { Layout } from '../components'
+import { sanityClient } from '../sanityClient'
 
 export const Occurrence = () => {
-  const { slug, date, org, action } = useParams();
-  const navigate = useNavigate();
-  const [gathering, setGathering] = useState();
-  const [isSaving, setSaving] = useState(false);
-  const { isOpen, onOpen, onClose } = useDisclose();
-  const {
-    addMember,
-    createMember,
-    fetchOccurrence,
-    tickAttendance,
-    updateAttendances,
-    updateOccurrence,
-  } = useApi({
+  const { slug, date, org, action } = useParams()
+  const navigate = useNavigate()
+  const [gathering, setGathering] = useState()
+  const [isSaving, setSaving] = useState(false)
+  const { isOpen, onOpen, onClose } = useDisclose()
+  const { addMember, createMember, fetchOccurrence, tickAttendance, updateAttendances, updateOccurrence } = useApi({
     date,
     slug,
-  });
+  })
 
-  const members = gathering?.members || [];
-  const occurrence = gathering?.occurrences?.[0];
-  const occurrenceKey = occurrence?._key;
+  const members = gathering?.members || []
+  const occurrence = gathering?.occurrences?.[0]
+  const occurrenceKey = occurrence?._key
 
   const loadGathering = useCallback(async () => {
     try {
-      const gathering = await fetchOccurrence();
-      setGathering(gathering);
+      const gathering = await fetchOccurrence()
+      setGathering(gathering)
     } catch (e) {
-      console.error(e.message);
+      console.error(e.message)
     }
-  }, [fetchOccurrence]);
+  }, [fetchOccurrence])
 
   useEffect(() => {
-    loadGathering();
-  }, [date, fetchOccurrence, loadGathering, slug]);
+    loadGathering()
+  }, [date, fetchOccurrence, loadGathering, slug])
 
   const handleTickMember = useCallback(
     async ({ attendanceMemberIds }) => {
-      const { _id: gatheringId, occurrences } = gathering || {};
-      const [{ _key: occurrenceKey }] = occurrences || [];
+      const { _id: gatheringId, occurrences } = gathering || {}
+      const [{ _key: occurrenceKey }] = occurrences || []
       await updateAttendances({
         gatheringId,
         occurrenceKey,
         attendanceMemberIds,
-      });
-      await loadGathering();
+      })
+      await loadGathering()
     },
-    [gathering, loadGathering, updateAttendances],
-  );
+    [gathering, loadGathering, updateAttendances]
+  )
 
   const handleAddAttendee = async ({ memberId, isGatheringMember }) => {
-    const { _id: gatheringId, occurrences } = gathering || {};
-    const [{ _key: occurrenceKey }] = occurrences || [];
-    setSaving(true);
+    const { _id: gatheringId, occurrences } = gathering || {}
+    const [{ _key: occurrenceKey }] = occurrences || []
+    setSaving(true)
     if (isGatheringMember) {
-      await addMember({ memberId, gatheringId });
+      await addMember({ memberId, gatheringId })
     }
-    await tickAttendance({ gatheringId, occurrenceKey, memberId });
-    await loadGathering();
-    setSaving(false);
-    onClose();
-  };
+    await tickAttendance({ gatheringId, occurrenceKey, memberId })
+    await loadGathering()
+    setSaving(false)
+    onClose()
+  }
 
   const handleCreateMember = async ({ data, isGatheringMember }) => {
-    const { name, alias, email } = data;
-    setSaving(true);
+    const { name, alias, email } = data
+    setSaving(true)
     const { _id: memberId } = await createMember({
       name,
       alias,
       email,
       organizationId: gathering.organization._ref,
-    });
-    await handleAddAttendee({ memberId, isGatheringMember });
-    setSaving(false);
-    onClose();
-  };
+    })
+    await handleAddAttendee({ memberId, isGatheringMember })
+    setSaving(false)
+    onClose()
+  }
 
   const handleCreateOccurrence = async () => {
-    const { _id: gatheringId } = gathering || {};
+    const { _id: gatheringId } = gathering || {}
     return sanityClient
       .patch(gatheringId)
       .setIfMissing({ occurrences: [] })
-      .append("occurrences", [{ date, attendances: [], _type: "occurrence" }])
-      .commit({ autoGenerateArrayKeys: true });
-  };
+      .append('occurrences', [{ date, attendances: [], _type: 'occurrence' }])
+      .commit({ autoGenerateArrayKeys: true })
+  }
 
   const handleUpdate = async ({ selectedDate, hostMemberId }) => {
     await updateOccurrence({
@@ -111,23 +96,23 @@ export const Occurrence = () => {
       prevDate: date,
       nextDate: selectedDate,
       hostMemberId,
-    });
+    })
 
-    navigate(`/${org}/gatherings/${slug}/${selectedDate}`);
-  };
+    navigate(`/${org}/gatherings/${slug}/${selectedDate}`)
+  }
 
   const renderHeaderContent = () => {
     if (!gathering) {
       return (
         <HStack alignItems="center" space="3">
-          <Skeleton w="120" h="5" rounded="sm" my="1" endColor="gray.200" />
+          <Skeleton endColor="gray.200" h="5" my="1" rounded="sm" w="120" />
           <Text color="gray.300">&gt;</Text>
-          <Skeleton w="120" h="5" rounded="sm" my="1" endColor="gray.200" />
+          <Skeleton endColor="gray.200" h="5" my="1" rounded="sm" w="120" />
         </HStack>
-      );
+      )
     }
 
-    const { title } = gathering;
+    const { title } = gathering
 
     return (
       <HStack alignItems="center" space="3">
@@ -142,15 +127,12 @@ export const Occurrence = () => {
           )
         </Text>
       </HStack>
-    );
-  };
+    )
+  }
 
   return (
     <>
-      <Layout
-        headerContent={renderHeaderContent()}
-        isLoading={!gathering || isSaving}
-      >
+      <Layout headerContent={renderHeaderContent()} isLoading={!gathering || isSaving}>
         <Stack space={5}>
           {gathering ? (
             <List
@@ -176,11 +158,11 @@ export const Occurrence = () => {
         {...{ isOpen, isSaving, onClose, occurrenceKey, members }}
       />
       <EditModal
-        isOpen={action === "edit"}
-        onSave={handleUpdate}
+        isOpen={action === 'edit'}
         onClose={() => navigate(`/${org}/gatherings/${slug}/${date}`)}
+        onSave={handleUpdate}
         {...{ date, slug }}
       />
     </>
-  );
-};
+  )
+}

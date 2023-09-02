@@ -1,14 +1,14 @@
+import { t } from '@lingui/macro'
 import groq from 'groq'
+import { AddIcon, Fab, HStack, Skeleton, Stack, Text, useDisclose } from 'native-base'
 import { useState, useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { AddIcon, Fab, HStack, Skeleton, Stack, Text, useDisclose } from 'native-base'
-import { t } from '@lingui/macro'
 
-import { Layout } from '../components'
-import { sanityClient } from '../sanityClient'
+import { AddModal } from './AddModal'
 import { Info } from './Info'
 import { List } from './List'
-import { AddModal } from './AddModal'
+import { Layout } from '../components'
+import { sanityClient } from '../sanityClient'
 
 const query = groq`
   *[_type == "gathering" && slug.current == $slug][0] {
@@ -87,7 +87,7 @@ export const Gathering = () => {
             <Link to={`/${org}/gatherings`}>{t`Gatherings`}</Link>
           </Text>
           <Text color="gray.300">&gt;</Text>
-          <Skeleton w="100" h="5" rounded="sm" my="1" endColor="gray.200" />
+          <Skeleton endColor="gray.200" h="5" my="1" rounded="sm" w="100" />
         </HStack>
       )
     }
@@ -110,11 +110,11 @@ export const Gathering = () => {
         </Stack>
         <Fab
           colorScheme="blue"
-          renderInPortal={false}
+          icon={<AddIcon name="plus" size="sm" />}
           onPress={onOpen}
+          renderInPortal={false}
           shadow={2}
           size="sm"
-          icon={<AddIcon name="plus" size="sm" />}
         />
       </Layout>
       <AddModal {...{ isOpen, onClose, slug }} />
