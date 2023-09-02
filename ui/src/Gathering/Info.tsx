@@ -1,18 +1,18 @@
-import { Center, Text, VStack } from "native-base";
-import { rrulestr } from "rrule";
-import { t, Trans } from "@lingui/macro";
+import { t, Trans } from '@lingui/macro'
+import { Center, Text, VStack } from 'native-base'
+import { rrulestr } from 'rrule'
 
-import { NameAlias } from "../components/name-alias";
+import { NameAlias } from '../components/name-alias'
 // @ts-ignore
-import type * as Schema from "../sanity-codegen";
+import type * as Schema from '../sanity-codegen'
 
 type Props = {
-  gathering: Schema.Gathering;
-};
+  gathering: Schema.Gathering
+}
 
 export const Info = ({ gathering }: Props) => {
-  const { recurrence, location, leader } = gathering;
-  const rrule = rrulestr(recurrence);
+  const { recurrence, location, leader } = gathering
+  const rrule = rrulestr(recurrence)
 
   return (
     <Center>
@@ -29,11 +29,10 @@ export const Info = ({ gathering }: Props) => {
         ) : null}
         {leader ? (
           <Text>
-            <Trans>Leader:</Trans>{" "}
-            <NameAlias name={leader.name} alias={leader.alias} />
+            <Trans>Leader:</Trans> <NameAlias alias={leader.alias} name={leader.name} />
           </Text>
         ) : null}
       </VStack>
     </Center>
-  );
-};
+  )
+}

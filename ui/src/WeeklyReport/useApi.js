@@ -1,8 +1,8 @@
-import groq from "groq";
-import { useCallback, useEffect, useState } from "react";
+import groq from 'groq'
+import { useCallback, useEffect, useState } from 'react'
 
-import { sanityClient } from "../sanityClient";
-import { mapGathering } from "./utils";
+import { mapGathering } from './utils'
+import { sanityClient } from '../sanityClient'
 
 const query = groq`
   *[_type == "gathering"] [] {  
@@ -26,68 +26,57 @@ const query = groq`
       }     
     }[0]
   }
-`;
+`
 
 export const useApi = ({ startDate, endDate }) => {
-  const [isLoading, setLoading] = useState(true);
-  const [data, setData] = useState();
-  console.log("=>(useApi.js:50) outside startDate", startDate);
-  console.log("=>(useApi.js:51) outside endDate", endDate);
+  const [isLoading, setLoading] = useState(true)
+  const [data, setData] = useState()
 
   const loadData = useCallback(async () => {
-    setLoading(true);
-
-    console.log("=>(useApi.js:50) startDate", startDate);
-    console.log("=>(useApi.js:51) endDate", endDate);
+    setLoading(true)
 
     try {
       const rawData = await sanityClient.fetch(query, {
         startDate,
         endDate,
-      });
-      const data = rawData.map(mapGathering);
-      setData(data);
+      })
+      const data = rawData.map(mapGathering)
+      setData(data)
     } catch (e) {
-      console.error(e.message);
+      console.error(e.message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  }, [startDate, endDate]);
+  }, [startDate, endDate])
 
-  const subscribe = useCallback(() => {
-    return sanityClient
-      .listen(query, { startDate, endDate })
-      .subscribe((update) => {
-        const rawGathering = update.result;
-        const index = data.findIndex(({ _id }) => _id === rawGathering._id);
-        const occurrenceDates = data[index].occurrences.map(({ date }) => date);
+  const subscribe = useCallback(
+    () =>
+      sanityClient.listen(query, { startDate, endDate }).subscribe((update) => {
+        const rawGathering = update.result
+        const index = data.findIndex(({ _id }) => _id === rawGathering._id)
+        const occurrenceDates = data[index].occurrences.map(({ date }) => date)
         const gathering = mapGathering({
           ...rawGathering,
-          occurrences: rawGathering.occurrences.filter(({ date }) =>
-            occurrenceDates.includes(date),
-          ),
-        });
+          occurrences: rawGathering.occurrences.filter(({ date }) => occurrenceDates.includes(date)),
+        })
 
-        const nextState = [
-          ...data.slice(0, index),
-          gathering,
-          ...data.slice(index + 1),
-        ];
+        const nextState = [...data.slice(0, index), gathering, ...data.slice(index + 1)]
 
-        setData(nextState);
-      });
-  }, [data, endDate, startDate]);
+        setData(nextState)
+      }),
+    [data, endDate, startDate]
+  )
 
   useEffect(() => {
-    const subscription = subscribe();
+    const subscription = subscribe()
     return () => {
-      subscription.unsubscribe();
-    };
-  }, [subscribe]);
+      subscription.unsubscribe()
+    }
+  }, [subscribe])
 
   useEffect(() => {
-    loadData();
-  }, [loadData]); // eslint-disable-line react-hooks/exhaustive-deps
+    loadData()
+  }, [loadData]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  return { data, isLoading };
-};
+  return { data, isLoading }
+}

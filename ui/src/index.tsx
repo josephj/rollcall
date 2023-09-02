@@ -1,18 +1,16 @@
+import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
+import { NativeBaseProvider } from 'native-base'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { ApolloProvider } from '@apollo/client'
-import { ApolloClient, InMemoryCache } from '@apollo/client'
-
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { NativeBaseProvider } from 'native-base'
 
 import { App } from './App'
-import { Gatherings } from './Gatherings'
 import { Gathering } from './Gathering'
-import { Occurrence } from './Occurrence'
-import { WeeklyReport } from './WeeklyReport'
+import { Gatherings } from './Gatherings'
 import { I18nApp } from './i18n'
-import reportWebVitals from './reportWebVitals'
+import { Occurrence } from './Occurrence'
+import { reportWebVitals } from './reportWebVitals'
+import { WeeklyReport } from './WeeklyReport'
 import './index.css'
 
 const env = process.env.REACT_APP_DATA_SET || 'development'
@@ -73,8 +71,8 @@ const router = createBrowserRouter([
   },
 ])
 
-const rootEl = document.getElementById('root')
-const root = createRoot(rootEl!)
+const rootEl = document.getElementById('root') || document.createElement('div')
+const root = createRoot(rootEl)
 root.render(
   <StrictMode>
     <ApolloProvider {...{ client }}>

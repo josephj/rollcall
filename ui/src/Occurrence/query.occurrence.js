@@ -1,4 +1,4 @@
-import groq from "groq";
+import groq from 'groq'
 
 export const occurrenceQuery = groq`
   *[_type == "gathering" && slug.current == $slug][0] {
@@ -39,10 +39,10 @@ export const occurrenceQuery = groq`
       alias,
     }
   }
-`;
+`
 
 export const occurrencesQuery = groq`
   *[_type == "gathering" && slug.current == $slug][0] {
     occurrences,
   }
-`;
+`

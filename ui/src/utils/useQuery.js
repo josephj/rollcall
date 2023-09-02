@@ -1,33 +1,31 @@
-import { useEffect, useRef, useState } from "react";
-import groq from "groq";
-import { sanityClient } from "../sanityClient";
+import groq from 'groq'
+import { useEffect, useRef, useState } from 'react'
+
+import { sanityClient } from '../sanityClient'
 
 export const useQuery = (query, params) => {
-  const [data, setData] = useState();
-  const [isLoading, setLoading] = useState(true);
-  const paramsRef = useRef(params);
+  const [data, setData] = useState()
+  const [isLoading, setLoading] = useState(true)
+  const paramsRef = useRef(params)
 
   useEffect(() => {
-    paramsRef.current = params;
-  }, [params]);
+    paramsRef.current = params
+  }, [params])
 
   useEffect(() => {
     async function fetchData() {
-      setLoading(true);
+      setLoading(true)
       try {
-        const response = await sanityClient.fetch(
-          groq([query]),
-          paramsRef.current
-        );
-        setData(response);
-        setLoading(false);
+        const response = await sanityClient.fetch(groq([query]), paramsRef.current)
+        setData(response)
+        setLoading(false)
       } catch (error) {
-        throw error;
+        throw error
       }
     }
 
-    fetchData();
-  }, [query]);
+    fetchData()
+  }, [query])
 
-  return { data, isLoading };
-};
+  return { data, isLoading }
+}

@@ -1,40 +1,33 @@
-import { Alert, Flex, HStack, InfoIcon } from "native-base";
-import { Trans } from "@lingui/macro";
+import { Trans } from '@lingui/macro'
+import { Alert, Flex, HStack, InfoIcon } from 'native-base'
 
-import { Header } from "./Header";
-import { LoadingSpinner } from "./LoadingSpinner";
+import { Header } from './Header'
+import { LoadingSpinner } from './LoadingSpinner'
 
 export const Layout = ({ headerContent, children, isLoading }) => {
-  const isDevelopment = process.env.REACT_APP_DATA_SET !== "production";
+  const isDevelopment = process.env.REACT_APP_DATA_SET !== 'production'
   return (
     <Flex flexDirection="column" height="100%">
-      {headerContent && <Header>{headerContent}</Header>}
+      {headerContent ? <Header>{headerContent}</Header> : null}
       <Flex
         alignItems="center"
-        height="0"
-        justifyContent="flex-start"
         flexGrow="1"
         flexShrink="1"
+        height="0"
+        justifyContent="flex-start"
         overflow="auto"
         paddingY="5"
         position="relative"
       >
-        {isDevelopment && (
-          <Alert
-            variant="left-accent"
-            colorScheme="info"
-            width="300px"
-            marginBottom={5}
-          >
-            <HStack space={2} alignItems="center">
+        {isDevelopment ? <Alert colorScheme="info" marginBottom={5} variant="left-accent" width="300px">
+            <HStack alignItems="center" space={2}>
               <InfoIcon color="blue.400" />
               <Trans flexGrow={1}>You are using the testing site.</Trans>
             </HStack>
-          </Alert>
-        )}
+                         </Alert> : null}
         {children}
-        {isLoading && <LoadingSpinner isOverlay />}
+        {isLoading ? <LoadingSpinner isOverlay /> : null}
       </Flex>
     </Flex>
-  );
-};
+  )
+}

@@ -1,7 +1,8 @@
-import {Rule as RuleType} from '@sanity/types'
+import {Rule as RuleType} from '@sanity/types' // eslint-disable-line import/named
 
 import {slugify} from '../utils'
 
+// @ts-ignore
 export const organization = {
   name: 'organization',
   title: 'Organization',
@@ -39,11 +40,10 @@ export const organization = {
       name: 'name',
       slug: 'slug',
     },
-    prepare: ({name, slug}) => {
-      return {
-        title: name,
-        subtitle: `/${slug.current}`,
-      }
-    },
+    // @ts-ignore
+    prepare: ({name, slug}) => ({
+      title: name,
+      subtitle: `/${slug.current}`,
+    }),
   },
 }

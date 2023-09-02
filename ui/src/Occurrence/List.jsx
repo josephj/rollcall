@@ -1,33 +1,27 @@
-import { useState, useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { Badge, Button, Box, Checkbox, HStack, Stack, Text } from "native-base";
-import { Trans } from "@lingui/macro";
+import { Trans } from '@lingui/macro'
+import { Badge, Button, Box, Checkbox, HStack, Stack, Text } from 'native-base'
+import { useState, useEffect } from 'react'
+import { Controller, useForm } from 'react-hook-form'
 
-import { Card } from "../components";
-import { AttendanceMenu } from "./AttendanceMenu";
+import { AttendanceMenu } from './AttendanceMenu'
+import { Card } from '../components'
 
-export const List = ({
-  date,
-  gathering,
-  onCreateOccurrence,
-  onTickMember,
-  onUpdate,
-}) => {
-  const { members = [], occurrences = [] } = gathering || {};
-  const attendances = occurrences[0]?.attendances || [];
-  const attendanceMemberIds = attendances.map(({ member }) => member?._id);
+export const List = ({ date, gathering, onCreateOccurrence, onTickMember, onUpdate }) => {
+  const { members = [], occurrences = [] } = gathering || {}
+  const attendances = occurrences[0]?.attendances || []
+  const attendanceMemberIds = attendances.map(({ member }) => member?._id)
   const { control, watch, handleSubmit } = useForm({
     defaultValues: { attendanceMemberIds },
-  });
-  const [groupValue] = useState(attendanceMemberIds);
+  })
+  const [groupValue] = useState(attendanceMemberIds)
 
   useEffect(() => {
-    const subscription = watch(handleSubmit(onTickMember));
-    return () => subscription.unsubscribe();
-  }, [handleSubmit, onTickMember, watch]);
+    const subscription = watch(handleSubmit(onTickMember))
+    return () => subscription.unsubscribe()
+  }, [handleSubmit, onTickMember, watch])
 
   if (!gathering) {
-    return null;
+    return null
   }
 
   if (!occurrences[0]) {
@@ -38,21 +32,21 @@ export const List = ({
           <Button onPress={() => onCreateOccurrence({ date })}>Create</Button>
         </Box>
       </Stack>
-    );
+    )
   }
 
   const people = [...members, ...attendances.map(({ member }) => member)]
     .map(({ _id, name, alias }) => ({ _id, name, alias }))
     .reduce((result, person) => {
-      const isDuplicate = result.some(({ _id }) => _id === person._id);
+      const isDuplicate = result.some(({ _id }) => _id === person._id)
       if (!isDuplicate) {
-        result.push(person);
+        result.push(person)
       }
-      return result;
+      return result
     }, [])
-    .sort((a, b) => a.name.localeCompare(b.name));
+    .sort((a, b) => a.name.localeCompare(b.name))
 
-  const totalAttendances = watch("attendanceMemberIds").length;
+  const totalAttendances = watch('attendanceMemberIds').length
 
   return (
     <Stack space="sm">
@@ -65,10 +59,10 @@ export const List = ({
           <Checkbox.Group {...field}>
             <Stack space={5}>
               {people.map(({ _id: memberId, name, alias }) => {
-                const isLeader = gathering?.leader?._id === memberId;
-                const hostMemberId = occurrences[0]?.host?._id;
-                const isHost = hostMemberId === memberId;
-                const isMember = members.some(({ _id }) => _id === memberId);
+                const isLeader = gathering?.leader?._id === memberId
+                const hostMemberId = occurrences[0]?.host?._id
+                const isHost = hostMemberId === memberId
+                const isMember = members.some(({ _id }) => _id === memberId)
                 return (
                   <Box key={memberId}>
                     <Checkbox size="lg" value={memberId}>
@@ -77,36 +71,18 @@ export const List = ({
                           <HStack space="2">
                             <Text fontWeight="500">{name}</Text>
                             <Text size="xsmall">{alias}</Text>
-                            {isLeader && <Text>⭐️</Text>}
+                            {isLeader ? <Text>⭐️</Text> : null}
                           </HStack>
                           <Stack space="xs">
-                            {isHost && (
-                              <Badge
-                                colorScheme="warning"
-                                fontSize="11px"
-                                width="70px"
-                              >
+                            {isHost ? <Badge colorScheme="warning" fontSize="11px" width="70px">
                                 <Trans fontSize="11px">🎤 Host</Trans>
-                              </Badge>
-                            )}
-                            {isMember && (
-                              <Badge
-                                colorScheme="info"
-                                fontSize="11px"
-                                width="70px"
-                              >
+                                      </Badge> : null}
+                            {isMember ? <Badge colorScheme="info" fontSize="11px" width="70px">
                                 <Trans fontSize="11px">👤 Member</Trans>
-                              </Badge>
-                            )}
-                            {!isMember && (
-                              <Badge
-                                colorScheme="success"
-                                fontSize="11px"
-                                width="70px"
-                              >
+                                        </Badge> : null}
+                            {!isMember ? <Badge colorScheme="success" fontSize="11px" width="70px">
                                 <Trans fontSize="11px">👋 Visitor</Trans>
-                              </Badge>
-                            )}
+                                         </Badge> : null}
                           </Stack>
                         </Stack>
                       </Card>
@@ -114,13 +90,13 @@ export const List = ({
                     <Box position="absolute" right="-25px" top="45%">
                       <AttendanceMenu
                         gatheringId={gathering?._id}
-                        occurrenceKey={occurrences[0]?._key}
                         isAttended={groupValue.includes(memberId)}
+                        occurrenceKey={occurrences[0]?._key}
                         {...{ memberId, isMember, isLeader, isHost, onUpdate }}
                       />
                     </Box>
                   </Box>
-                );
+                )
               })}
             </Stack>
           </Checkbox.Group>
@@ -128,5 +104,5 @@ export const List = ({
         {...{ control }}
       />
     </Stack>
-  );
-};
+  )
+}

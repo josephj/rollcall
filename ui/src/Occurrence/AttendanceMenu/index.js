@@ -1,1 +1,1 @@
-export * from "./AttendanceMenu";
+export * from './AttendanceMenu'

@@ -1,20 +1,12 @@
-import { useCallback, useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import {
-  Button,
-  Checkbox,
-  Divider,
-  FormControl,
-  Stack,
-  HStack,
-  Modal,
-} from "native-base";
-import CreatableSelect from "react-select/creatable";
-import { t } from "@lingui/macro";
+import { t } from '@lingui/macro'
+import { Button, Checkbox, Divider, FormControl, Stack, HStack, Modal } from 'native-base'
+import { useCallback, useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import CreatableSelect from 'react-select/creatable'
 
-import { HookInput } from "../components";
-import { sanityClient } from "../sanityClient";
-import { membersQuery } from "./query.members";
+import { membersQuery } from './query.members'
+import { HookInput } from '../components'
+import { sanityClient } from '../sanityClient'
 
 export const AddMemberModal = ({
   gatheringId,
@@ -26,71 +18,71 @@ export const AddMemberModal = ({
   onSelectMember,
   onClose,
 }) => {
-  const [options, setOptions] = useState([]);
-  const [isLoading, setLoading] = useState(false);
-  const [isCreating, setCreating] = useState(false);
-  const [isGatheringMember, setGatheringMember] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(null);
-  const { control, handleSubmit, reset, setValue } = useForm();
+  const [options, setOptions] = useState([])
+  const [isLoading, setLoading] = useState(false)
+  const [isCreating, setCreating] = useState(false)
+  const [isGatheringMember, setGatheringMember] = useState(false)
+  const [selectedOption, setSelectedOption] = useState(null)
+  const { control, handleSubmit, reset, setValue } = useForm()
 
   useEffect(() => {
     if (!isOpen) {
-      setSelectedOption(null);
-      reset();
+      setSelectedOption(null)
+      reset()
     }
-  }, [isOpen, reset, selectedOption]);
+  }, [isOpen, reset, selectedOption])
 
   const fetchMembers = useCallback(
-    async ({ searchString = "" } = {}) => {
+    async ({ searchString = '' } = {}) => {
       const members = await sanityClient.fetch(membersQuery, {
         searchString: searchString.trim(),
         gatheringId,
         occurrenceKey,
-      });
+      })
 
       const options = members.map(({ name, alias, _id }) => ({
         value: _id,
         label: alias ? `${name} ${alias}` : name,
         isDisabled: gatheringMembers.some((member) => member._id === _id),
-      }));
+      }))
 
-      setOptions(options);
-      setLoading(false);
+      setOptions(options)
+      setLoading(false)
     },
-    [gatheringId, gatheringMembers, occurrenceKey],
-  );
+    [gatheringId, gatheringMembers, occurrenceKey]
+  )
 
   const handleAddMember = (data) => {
-    onCreateMember({ data, isGatheringMember });
-  };
+    onCreateMember({ data, isGatheringMember })
+  }
 
   const handleClose = () => {
-    setCreating(false);
-    onClose();
-    reset();
-  };
+    setCreating(false)
+    onClose()
+    reset()
+  }
 
   const handleSelectMember = () => {
-    const { value: memberId } = selectedOption;
-    onSelectMember({ memberId, isGatheringMember });
-  };
+    const { value: memberId } = selectedOption
+    onSelectMember({ memberId, isGatheringMember })
+  }
 
   const handleCreateMember = async (name) => {
-    setCreating(true);
-    setValue("name", name);
-  };
+    setCreating(true)
+    setValue('name', name)
+  }
 
   const handleMenuOpen = async () => {
-    setLoading(true);
-    await fetchMembers();
-  };
+    setLoading(true)
+    await fetchMembers()
+  }
 
   const customStyles = {
     control: (base) => ({
       ...base,
-      maxHeight: "100px",
+      maxHeight: '100px',
     }),
-  };
+  }
 
   return (
     <Modal isOpen size="md" {...{ isOpen, onClose }}>
@@ -100,49 +92,35 @@ export const AddMemberModal = ({
         <Modal.Body minHeight="450px">
           <Stack space={5}>
             <FormControl>
-              <HStack space="xs" alignItems="center">
-                <Checkbox
-                  isChecked={isGatheringMember}
-                  onChange={setGatheringMember}
-                  value={true}
-                />
-                <FormControl.Label
-                  margin="0"
-                  onClick={() => setGatheringMember(!isGatheringMember)}
-                >
+              <HStack alignItems="center" space="xs">
+                <Checkbox isChecked={isGatheringMember} onChange={setGatheringMember} value={true} />
+                <FormControl.Label margin="0" onClick={() => setGatheringMember(!isGatheringMember)}>
                   {t`Member`}
                 </FormControl.Label>
-                <FormControl.HelperText margin="0">
-                  {t`Save the attendee as gathering member`}
-                </FormControl.HelperText>
+                <FormControl.HelperText margin="0">{t`Save the attendee as gathering member`}</FormControl.HelperText>
               </HStack>
             </FormControl>
             <FormControl isRequired>
               <FormControl.Label>{t`Attendee:`}</FormControl.Label>
               <CreatableSelect
-                isDisabled={isCreating}
-                isClearable
-                placeholder={t`Select or create a new attendee`}
-                loadingMessage={() => t`Loading...`}
                 formatCreateLabel={(inputValue) => t`Create "${inputValue}"`}
-                onCreateOption={handleCreateMember}
+                isClearable
+                isDisabled={isCreating}
+                loadingMessage={() => t`Loading...`}
                 onChange={setSelectedOption}
+                onCreateOption={handleCreateMember}
                 onMenuOpen={handleMenuOpen}
-                value={selectedOption}
+                placeholder={t`Select or create a new attendee`}
                 styles={customStyles}
+                value={selectedOption}
                 {...{ options, isLoading }}
               />
-              <FormControl.HelperText>
-                {t`Select from existing members or create a new one`}
-              </FormControl.HelperText>
+              <FormControl.HelperText>{t`Select from existing members or create a new one`}</FormControl.HelperText>
             </FormControl>
-            {isCreating && (
+            {isCreating ? (
               <>
                 <Divider />
-                <form
-                  id="add-member-form"
-                  onSubmit={handleSubmit(handleAddMember)}
-                >
+                <form id="add-member-form" onSubmit={handleSubmit(handleAddMember)}>
                   <Stack space={5}>
                     <FormControl>
                       <FormControl.Label>{t`Name`}</FormControl.Label>
@@ -180,21 +158,19 @@ export const AddMemberModal = ({
                   </Stack>
                 </form>
               </>
-            )}
+            ) : null}
           </Stack>
         </Modal.Body>
         <Modal.Footer>
           <HStack space="sm">
-            <Button variant="ghost" onPress={handleClose}>
+            <Button onPress={handleClose} variant="ghost">
               {t`Cancel`}
             </Button>
             <Button
               form="add-member-form"
-              isDisabled={!isCreating && !selectedOption}
+              isDisabled={!isCreating ? !selectedOption : null}
               isLoading={isSaving}
-              onPress={handleSubmit(
-                isCreating ? handleAddMember : handleSelectMember,
-              )}
+              onPress={handleSubmit(isCreating ? handleAddMember : handleSelectMember)}
             >
               {t`Save`}
             </Button>
@@ -202,5 +178,5 @@ export const AddMemberModal = ({
         </Modal.Footer>
       </Modal.Content>
     </Modal>
-  );
-};
+  )
+}

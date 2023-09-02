@@ -1,30 +1,29 @@
-import { useState } from "react";
-import { Center, Heading, HStack, Spinner, Stack, Text } from "native-base";
-import { Card } from "../components";
-import { getUpcomingDates } from "./utils";
-import { rrulestr } from "rrule";
-import { t, Trans } from "@lingui/macro";
+import { t, Trans } from '@lingui/macro'
+import { Center, Heading, HStack, Spinner, Stack, Text } from 'native-base'
+import { useState } from 'react'
+import { rrulestr } from 'rrule'
+
+import { getUpcomingDates } from './utils'
+import { Card } from '../components'
 
 export const List = ({ gathering, onCreate, onEdit }) => {
-  const [isCreating, setCreating] = useState(false);
+  const [isCreating, setCreating] = useState(false)
 
   if (!gathering) {
-    return null;
+    return null
   }
 
-  const { occurrences = [], recurrence } = gathering || {};
-  const rrule = rrulestr(recurrence);
-  const createdDates = occurrences?.map?.(({ date }) => date) || [];
-  const notCreatedDates = getUpcomingDates({ rrule }).filter(
-    (date) => !createdDates.includes(date),
-  );
+  const { occurrences = [], recurrence } = gathering || {}
+  const rrule = rrulestr(recurrence)
+  const createdDates = occurrences?.map?.(({ date }) => date) || []
+  const notCreatedDates = getUpcomingDates({ rrule }).filter((date) => !createdDates.includes(date))
 
   const handleClickCreate = (date) => () => {
     if (!isCreating) {
-      setCreating(true);
-      onCreate(date);
+      setCreating(true)
+      onCreate(date)
     }
-  };
+  }
 
   return (
     <>
@@ -36,11 +35,11 @@ export const List = ({ gathering, onCreate, onEdit }) => {
           <Stack space="5">
             {notCreatedDates.map((date) => (
               <Card
-                key={date}
-                textAlign="center"
-                minWidth="250px"
                 isDisabled={isCreating}
-                onClick={!isCreating && handleClickCreate(date)}
+                key={date}
+                minWidth="250px"
+                onClick={!isCreating ? handleClickCreate(date) : null}
+                textAlign="center"
               >
                 {isCreating ? (
                   <Center alignItems="center">
@@ -65,18 +64,12 @@ export const List = ({ gathering, onCreate, onEdit }) => {
           </Heading>
           <Stack space="5">
             {occurrences.map(({ _key, date, attendances = [] }) => (
-              <Card
-                key={_key}
-                textAlign="center"
-                minWidth="250px"
-                onClick={() => onEdit(date)}
-              >
+              <Card key={_key} minWidth="250px" onClick={() => onEdit(date)} textAlign="center">
                 <Text fontSize="13" fontWeight="500">
                   {date}
                 </Text>
                 <Text fontSize="11">
-                  {t`Attendances:`}{" "}
-                  <Text fontWeight="500">{attendances.length}</Text>
+                  {t`Attendances:`} <Text fontWeight="500">{attendances.length}</Text>
                 </Text>
               </Card>
             ))}
@@ -84,5 +77,5 @@ export const List = ({ gathering, onCreate, onEdit }) => {
         </Stack>
       ) : null}
     </>
-  );
-};
+  )
+}
