@@ -110,7 +110,7 @@ module.exports = {
       },
     },
     {
-      files: ['**/*.ts', '**/*.tsx'],
+      files: ['ui/**/*.ts', 'ui/**/*.tsx'],
       parser: '@typescript-eslint/parser',
       plugins: ['@typescript-eslint'],
       extends: ['plugin:@typescript-eslint/recommended'],
