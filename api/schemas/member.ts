@@ -43,8 +43,8 @@ export const member = {
       alias: 'alias',
     },
     prepare: ({name, alias}) => ({
-        title: name,
-        subtitle: alias,
-      }),
+      title: name,
+      subtitle: alias,
+    }),
   },
 }
