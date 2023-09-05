@@ -19,7 +19,6 @@ pre-commit:
       run: ".lefthook/is-not-master"
 
     js-lint-and-stage:
-      root: ui/
       glob: "ui/**/*.{js,jsx,ts,tsx,graphql,json}"
       run: yarn prettier --write {staged_files} && yarn eslint --fix {staged_files} && git add {staged_files}
 
