@@ -79,8 +79,8 @@ export const gathering = {
       title: 'title',
     },
     prepare: ({name, slug, title}) => ({
-        title: `${title} (${name})`,
-        subtitle: `/${slug.current}`,
-      }),
+      title: `${title} (${name})`,
+      subtitle: `/${slug.current}`,
+    }),
   },
 }

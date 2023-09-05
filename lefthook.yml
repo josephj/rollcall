@@ -1,0 +1,25 @@
+# Pre-commit hooks for linting & autocorrection of code.
+#
+# These can be enabled in macOS with Homebrew like so:
+#
+#   > brew install lefthook
+#   > lefthook install
+#
+# For other environments, see the documentation on Github
+#   https://github.com/evilmartians/lefthook/
+
+pre-commit:
+  parallel: true
+
+  commands:
+    is-not-master:
+      skip:
+        - rebase
+        - merge
+      run: ".lefthook/is-not-master"
+
+    js-lint-and-stage:
+      root: ui/
+      glob: "ui/**/*.{js,jsx,ts,tsx,graphql,json}"
+      run: yarn prettier --write {staged_files} && yarn eslint --fix {staged_files} && git add {staged_files}
+

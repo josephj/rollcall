@@ -74,15 +74,21 @@ export const List = ({ date, gathering, onCreateOccurrence, onTickMember, onUpda
                             {isLeader ? <Text>⭐️</Text> : null}
                           </HStack>
                           <Stack space="xs">
-                            {isHost ? <Badge colorScheme="warning" fontSize="11px" width="70px">
+                            {isHost ? (
+                              <Badge colorScheme="warning" fontSize="11px" width="70px">
                                 <Trans fontSize="11px">🎤 Host</Trans>
-                                      </Badge> : null}
-                            {isMember ? <Badge colorScheme="info" fontSize="11px" width="70px">
+                              </Badge>
+                            ) : null}
+                            {isMember ? (
+                              <Badge colorScheme="info" fontSize="11px" width="70px">
                                 <Trans fontSize="11px">👤 Member</Trans>
-                                        </Badge> : null}
-                            {!isMember ? <Badge colorScheme="success" fontSize="11px" width="70px">
+                              </Badge>
+                            ) : null}
+                            {!isMember ? (
+                              <Badge colorScheme="success" fontSize="11px" width="70px">
                                 <Trans fontSize="11px">👋 Visitor</Trans>
-                                         </Badge> : null}
+                              </Badge>
+                            ) : null}
                           </Stack>
                         </Stack>
                       </Card>

@@ -38,10 +38,10 @@ export const Header = ({ children, ...otherProps }) => {
       <Box left="5" position="absolute" top="5">
         <Menu
           trigger={(triggerProps) => (
-              <Pressable accessibilityLabel="More options menu" {...triggerProps}>
-                <HamburgerIcon size="lg" />
-              </Pressable>
-            )}
+            <Pressable accessibilityLabel="More options menu" {...triggerProps}>
+              <HamburgerIcon size="lg" />
+            </Pressable>
+          )}
         >
           <Menu.Item>
             <Button onPress={() => navigate('/')} padding="0" variant="unstyled">

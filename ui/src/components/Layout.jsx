@@ -19,12 +19,14 @@ export const Layout = ({ headerContent, children, isLoading }) => {
         paddingY="5"
         position="relative"
       >
-        {isDevelopment ? <Alert colorScheme="info" marginBottom={5} variant="left-accent" width="300px">
+        {isDevelopment ? (
+          <Alert colorScheme="info" marginBottom={5} variant="left-accent" width="300px">
             <HStack alignItems="center" space={2}>
               <InfoIcon color="blue.400" />
               <Trans flexGrow={1}>You are using the testing site.</Trans>
             </HStack>
-                         </Alert> : null}
+          </Alert>
+        ) : null}
         {children}
         {isLoading ? <LoadingSpinner isOverlay /> : null}
       </Flex>
