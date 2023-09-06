@@ -38,6 +38,11 @@ const Trans = ({ isTranslated, children, ...rest }: TransProp) => (
   </Text>
 )
 
+// Fix the following warning message.
+// I18nProvider rendered `null`. A call to `i18n.activate` needs to happen in order for translations to be activated...
+i18n.load(DEFAULT_LOCALE, {})
+i18n.activate(DEFAULT_LOCALE)
+
 export const I18nApp = ({ children }: { children: ReactElement }) => {
   useEffect(() => {
     const locale = getLocale()

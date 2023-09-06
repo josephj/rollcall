@@ -55,7 +55,7 @@ export const Header = ({ children, ...otherProps }) => {
           </Menu.Item>
           <Divider />
           {availableLocales.map(({ label, value }) => (
-            <Menu.Item>
+            <Menu.Item key={value}>
               <Button onPress={handleSwitchLocale(value)} padding="0" variant="unstyled">
                 {label}
               </Button>
