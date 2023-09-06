@@ -1,0 +1,10 @@
+query {
+  allOrganization {
+    _id
+    slug {
+      current
+    }
+    title
+    name
+  }
+}

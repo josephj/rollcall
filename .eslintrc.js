@@ -125,5 +125,13 @@ module.exports = {
         '@typescript-eslint/method-signature-style': ['error', 'method'],
       },
     },
+    {
+      files: ['ui/**/*.graphql'],
+      parser: '@graphql-eslint/eslint-plugin',
+      plugins: ['@graphql-eslint'],
+      rules: {
+        '@graphql-eslint/known-type-names': 'error',
+      },
+    },
   ],
 }
