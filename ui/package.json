@@ -42,7 +42,8 @@
     "eject": "react-scripts eject",
     "extract": "lingui extract",
     "compile": "lingui compile",
-    "graphql:schema": "get-graphql-schema https://5wmwst53.api.sanity.io/v1/graphql/production/default > schema.graphql"
+    "graphql:schema": "get-graphql-schema https://5wmwst53.api.sanity.io/v1/graphql/production/default > schema.graphql",
+    "graphql:generate": "gql-gen --config codegen.js"
   },
   "browserslist": {
     "production": [
@@ -57,10 +58,17 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "^7.22.15",
-    "@lingui/cli": "^4.4.2",
-    "@lingui/format-json": "^4.4.2",
-    "@lingui/macro": "^4.4.2",
+    "@babel/core": "^7.22.10",
+    "@graphql-codegen/add": "^5.0.0",
+    "@graphql-codegen/cli": "^5.0.0",
+    "@graphql-codegen/import-types-preset": "^2.2.6",
+    "@graphql-codegen/typescript": "^4.0.1",
+    "@graphql-codegen/typescript-operations": "^4.0.1",
+    "@graphql-codegen/typescript-react-apollo": "^3.3.7",
+    "@graphql-codegen/typescript-resolvers": "^4.0.1",
+    "@lingui/cli": "^4.4.0",
+    "@lingui/format-json": "^4.4.0",
+    "@lingui/macro": "^4.4.0",
     "babel-plugin-macros": "^3.1.0",
     "customize-cra": "^1.0.0",
     "get-graphql-schema": "^2.1.2",

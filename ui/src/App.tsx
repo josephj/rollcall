@@ -1,25 +1,12 @@
-import { gql, useQuery } from '@apollo/client'
 import { Flex, Stack, Text } from 'native-base'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { Card, Layout } from './components'
-
-const GET_GATHERING_LIST = gql`
-  query {
-    allOrganization {
-      _id
-      slug {
-        current
-      }
-      title
-      name
-    }
-  }
-`
+import { useAllOrganizationQuery } from './generated/hooks'
 
 export const App = () => {
-  const { loading: isLoading, data } = useQuery(GET_GATHERING_LIST)
+  const { loading: isLoading, data } = useAllOrganizationQuery()
   const navigate = useNavigate()
   const organizations = data?.allOrganization || []
 
@@ -27,11 +14,11 @@ export const App = () => {
     const organizations = data?.allOrganization || []
     if (organizations.length === 1) {
       const [{ slug }] = organizations
-      navigate(`/${slug.current}/gatherings`, { replace: true })
+      navigate(`/${slug?.current}/gatherings`, { replace: true })
     }
   }, [data, navigate])
 
-  const handleClick = (slug) => {
+  const handleClick = (slug: string) => {
     navigate(`/${slug}/gatherings`)
   }
 
@@ -46,6 +33,7 @@ export const App = () => {
       <Flex height="100%" justifyContent="center">
         <Stack space={5}>
           {organizations.map(({ _id, slug, name }) => (
+            // @ts-ignore
             <Card key={_id} minWidth="250px" onClick={() => handleClick(slug.current)} textAlign="center">
               <Text fontWeight="400">{name}</Text>
             </Card>
