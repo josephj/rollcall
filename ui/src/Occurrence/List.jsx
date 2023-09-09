@@ -1,4 +1,4 @@
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { Badge, Button, Box, Checkbox, HStack, Stack, Text } from 'native-base'
 import { useState, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -73,21 +73,11 @@ export const List = ({ date, gathering, onCreateOccurrence, onTickMember, onUpda
                             <Text size="xsmall">{alias}</Text>
                             {isLeader ? <Text>⭐️</Text> : null}
                           </HStack>
-                          <Stack space="xs">
-                            {isHost ? (
-                              <Badge colorScheme="warning" fontSize="11px" width="70px">
-                                <Trans fontSize="11px">🎤 Host</Trans>
-                              </Badge>
-                            ) : null}
-                            {isMember ? (
-                              <Badge colorScheme="info" fontSize="11px" width="70px">
-                                <Trans fontSize="11px">👤 Member</Trans>
-                              </Badge>
-                            ) : null}
+                          <Stack display="inline-block" fontSize="11px" space="2xs">
+                            {isHost ? <Badge colorScheme="warning" display="inline-block">{t`🎤 Host`}</Badge> : null}
+                            {isMember ? <Badge colorScheme="info" display="inline-block">{t`👤 Member`}</Badge> : null}
                             {!isMember ? (
-                              <Badge colorScheme="success" fontSize="11px" width="70px">
-                                <Trans fontSize="11px">👋 Visitor</Trans>
-                              </Badge>
+                              <Badge colorScheme="success" display="inline-block">{t`👋 Visitor`}</Badge>
                             ) : null}
                           </Stack>
                         </Stack>
