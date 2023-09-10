@@ -1,4 +1,4 @@
-import { t, Trans } from '@lingui/macro'
+import { t } from '@lingui/macro'
 import { Badge, Button, Box, Checkbox, HStack, Stack, Text } from 'native-base'
 import { useState, useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -50,8 +50,22 @@ export const List = ({ date, gathering, onCreateOccurrence, onTickMember, onUpda
 
   return (
     <Stack space="sm">
-      <Box alignSelf="center" textAlign="center">
-        <Trans>Attendances: {totalAttendances}</Trans>
+      <Box
+        alignSelf="center"
+        bg="white"
+        borderRadius="md"
+        display="block"
+        padding="10px"
+        position="sticky"
+        style={{
+          boxShadow: '0 0 3px rgba(0, 0, 0, 0.1)',
+        }}
+        textAlign="center"
+        top="0"
+        width="100%"
+        zIndex="1"
+      >
+        {t`Attendances: ${totalAttendances}`}
       </Box>
       <Controller
         name="attendanceMemberIds"
