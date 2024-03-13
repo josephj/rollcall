@@ -3,7 +3,6 @@ import { detect, fromUrl, fromStorage, fromNavigator } from '@lingui/detect-loca
 import type { TransRenderProps } from '@lingui/react'
 import { I18nProvider } from '@lingui/react'
 import type { ITextProps } from 'native-base'
-import { Text } from 'native-base'
 import type { ReactElement } from 'react'
 import { useEffect } from 'react'
 
@@ -32,10 +31,8 @@ type TransProp = {
   children: TransRenderProps['children']
 } & ITextProps
 
-const Trans = ({ isTranslated, children, ...rest }: TransProp) => (
-  <Text bgColor={isTranslated ? undefined : 'red.50'} {...rest}>
-    {children}
-  </Text>
+const Trans = ({ isTranslated, children }: TransProp) => (
+  <span style={{ backgroundColor: isTranslated ? undefined : 'pink' }}>{children}</span>
 )
 
 // Fix the following warning message.
