@@ -24,11 +24,11 @@ export const member = {
       type: 'string',
     },
     {
-      name: 'organization',
-      title: 'Organization',
-      type: 'reference',
-      to: [{type: 'organization'}],
-      validation: (Rule: RuleType) => Rule.required(),
+      name: 'organizations',
+      title: 'Organizations',
+      type: 'array',
+      of: [{type: 'reference', to: [{type: 'organization'}]}],
+      validation: (Rule: RuleType) => Rule.required().min(1),
     },
     {
       name: 'gatherings',
