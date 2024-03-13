@@ -75,12 +75,13 @@ export const gathering = {
   preview: {
     select: {
       name: 'name',
-      slug: 'slug',
+      slug: 'slug.current',
       title: 'title',
+      organizationSlug: 'organization.slug.current',
     },
-    prepare: ({name, slug, title}) => ({
+    prepare: ({organizationSlug, name, slug, title}) => ({
       title: `${title} (${name})`,
-      subtitle: `/${slug.current}`,
+      subtitle: `/${organizationSlug}/${slug}`,
     }),
   },
 }
