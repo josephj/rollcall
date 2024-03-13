@@ -11,10 +11,14 @@ export const App = () => {
   const organizations = data?.allOrganization || []
 
   useEffect(() => {
-    const organizations = data?.allOrganization || []
-    if (organizations.length === 1) {
-      const [{ slug }] = organizations
-      navigate(`/${slug?.current}/gatherings`, { replace: true })
+    const url = new URL(location.href)
+    switch (url.host) {
+      case 'checkin.efcsydney.org':
+        navigate(`/efcsydney/gatherings`, { replace: true })
+        break
+      case 'checkin.efcglory.org':
+        navigate(`/efcglory/gatherings`, { replace: true })
+        break
     }
   }, [data, navigate])
 
