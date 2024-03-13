@@ -2,6 +2,7 @@ import { t } from '@lingui/macro'
 import { Button, Checkbox, Divider, FormControl, Stack, HStack, Modal } from 'native-base'
 import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useParams } from 'react-router-dom'
 import CreatableSelect from 'react-select/creatable'
 
 import { membersQuery } from './query.members'
@@ -9,9 +10,7 @@ import { HookInput } from '../components'
 import { sanityClient } from '../sanityClient'
 
 export const AddMemberModal = ({
-  gatheringId,
   members: gatheringMembers,
-  occurrenceKey,
   isOpen = true,
   isSaving = false,
   onCreateMember,
@@ -24,6 +23,7 @@ export const AddMemberModal = ({
   const [isGatheringMember, setGatheringMember] = useState(false)
   const [selectedOption, setSelectedOption] = useState(null)
   const { control, handleSubmit, reset, setValue } = useForm()
+  const { org: organizationSlug } = useParams()
 
   useEffect(() => {
     if (!isOpen) {
@@ -32,25 +32,20 @@ export const AddMemberModal = ({
     }
   }, [isOpen, reset, selectedOption])
 
-  const fetchMembers = useCallback(
-    async ({ searchString = '' } = {}) => {
-      const members = await sanityClient.fetch(membersQuery, {
-        searchString: searchString.trim(),
-        gatheringId,
-        occurrenceKey,
-      })
+  const fetchMembers = useCallback(async () => {
+    const members = await sanityClient.fetch(membersQuery, {
+      organizationSlug,
+    })
 
-      const options = members.map(({ name, alias, _id }) => ({
-        value: _id,
-        label: alias ? `${name} ${alias}` : name,
-        isDisabled: gatheringMembers.some((member) => member._id === _id),
-      }))
+    const options = members.map(({ name, alias, _id }) => ({
+      value: _id,
+      label: alias ? `${name} ${alias}` : name,
+      isDisabled: gatheringMembers.some((member) => member._id === _id),
+    }))
 
-      setOptions(options)
-      setLoading(false)
-    },
-    [gatheringId, gatheringMembers, occurrenceKey]
-  )
+    setOptions(options)
+    setLoading(false)
+  }, [gatheringMembers, organizationSlug])
 
   const handleAddMember = (data) => {
     onCreateMember({ data, isGatheringMember })
