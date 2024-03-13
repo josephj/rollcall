@@ -5,7 +5,7 @@ import { mapGathering } from './utils'
 import { sanityClient } from '../sanityClient'
 
 const query = groq`
-  *[_type == "gathering"] [] {  
+  *[_type == "gathering" && organization->slug.current == $orgnizationSlug] [] {  
     _id,
     title,
     slug {
@@ -28,7 +28,7 @@ const query = groq`
   }
 `
 
-export const useApi = ({ startDate, endDate }) => {
+export const useApi = ({ startDate, endDate, orgnizationSlug }) => {
   const [isLoading, setLoading] = useState(true)
   const [data, setData] = useState()
 
@@ -39,6 +39,7 @@ export const useApi = ({ startDate, endDate }) => {
       const rawData = await sanityClient.fetch(query, {
         startDate,
         endDate,
+        orgnizationSlug,
       })
       const data = rawData.map(mapGathering)
       setData(data)
@@ -47,11 +48,11 @@ export const useApi = ({ startDate, endDate }) => {
     } finally {
       setLoading(false)
     }
-  }, [startDate, endDate])
+  }, [startDate, endDate, orgnizationSlug])
 
   const subscribe = useCallback(
     () =>
-      sanityClient.listen(query, { startDate, endDate }).subscribe((update) => {
+      sanityClient.listen(query, { startDate, endDate, orgnizationSlug }).subscribe((update) => {
         const rawGathering = update.result
         const index = data.findIndex(({ _id }) => _id === rawGathering._id)
         const occurrenceDates = data[index].occurrences.map(({ date }) => date)
@@ -64,7 +65,7 @@ export const useApi = ({ startDate, endDate }) => {
 
         setData(nextState)
       }),
-    [data, endDate, startDate]
+    [data, endDate, orgnizationSlug, startDate]
   )
 
   useEffect(() => {
