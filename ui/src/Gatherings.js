@@ -6,13 +6,12 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { Card, Layout } from './components'
 
 const GET_GATHERING_LIST = gql`
-  query {
-    allGathering {
+  query ($org: String!) {
+    allGathering(where: { organization: { slug: { current: { eq: $org } } } }) {
       _id
       slug {
         current
       }
-      title
       name
     }
   }
@@ -21,7 +20,7 @@ const GET_GATHERING_LIST = gql`
 export const Gatherings = () => {
   const { org } = useParams()
   const navigate = useNavigate()
-  const { loading, data } = useQuery(GET_GATHERING_LIST)
+  const { loading, data } = useQuery(GET_GATHERING_LIST, { variables: { org } })
   const gatherings = data?.allGathering || []
 
   return (
