@@ -36,10 +36,11 @@ export const App = () => {
     <Layout {...{ headerContent, isLoading }}>
       <Flex height="100%" justifyContent="center">
         <Stack space={5}>
-          {organizations.map(({ _id, slug, name }) => (
+          {organizations.map(({ _id, slug, name, title }) => (
             // @ts-ignore
             <Card key={_id} minWidth="250px" onClick={() => handleClick(slug.current)} textAlign="center">
-              <Text fontWeight="400">{name}</Text>
+              <Text fontWeight="500">{title}</Text>
+              <Text fontSize="11px">{name}</Text>
             </Card>
           ))}
         </Stack>

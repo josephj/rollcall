@@ -12,6 +12,7 @@ const GET_GATHERING_LIST = gql`
       slug {
         current
       }
+      title
       name
     }
   }
