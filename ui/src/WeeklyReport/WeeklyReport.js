@@ -20,6 +20,7 @@ export const WeeklyReport = () => {
   const { data, isLoading } = useApi({
     startDate,
     endDate,
+    orgnizationSlug: org,
   })
 
   const prevStartDate = startDateTime.subtract(1, 'week').format('YYYY-MM-DD')
