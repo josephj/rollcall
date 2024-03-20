@@ -1,5 +1,6 @@
 import groq from 'groq'
 import { useCallback } from 'react'
+import { v4 as uuidv4 } from 'uuid'
 
 import { occurrenceQuery } from './query.occurrence'
 import { sanityClient } from '../sanityClient'
@@ -20,7 +21,7 @@ export const useApi = ({ date, slug }) => {
         email,
         gatherings: [],
         name,
-        organization: { _ref: organizationId, _type: 'reference' },
+        organizations: [{ _key: uuidv4(), _ref: organizationId, _type: 'reference' }],
       }),
     []
   )
