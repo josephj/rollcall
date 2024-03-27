@@ -2,6 +2,7 @@ import { t } from '@lingui/macro'
 import groq from 'groq'
 import { AddIcon, Fab, HStack, Skeleton, Stack, Text, useDisclose } from 'native-base'
 import { useState, useEffect } from 'react'
+import { Helmet } from 'react-helmet'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import { AddModal } from './AddModal'
@@ -103,6 +104,9 @@ export const Gathering = () => {
 
   return (
     <>
+      <Helmet>
+        <title>{org === 'efcglory' ? '榮益福音教會點名' : '雪梨台福教會點名'}</title>
+      </Helmet>
       <Layout headerContent={renderHeaderContent()} isLoading={!gathering}>
         <Stack space={5}>
           {gathering ? <Info {...{ gathering }} /> : null}

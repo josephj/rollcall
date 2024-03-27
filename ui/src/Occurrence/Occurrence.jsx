@@ -1,6 +1,7 @@
 import { Trans } from '@lingui/macro'
 import { Divider, HStack, Stack, Skeleton, Text, useDisclose } from 'native-base'
 import { useCallback, useEffect, useState } from 'react'
+import { Helmet } from 'react-helmet'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import { AddMemberModal } from './AddMemberModal'
@@ -132,6 +133,9 @@ export const Occurrence = () => {
 
   return (
     <>
+      <Helmet>
+        <title>{org === 'efcglory' ? '榮益福音教會點名' : '雪梨台福教會點名'}</title>
+      </Helmet>
       <Layout headerContent={renderHeaderContent()} isLoading={!gathering || isSaving}>
         <Stack space={5}>
           {gathering ? (

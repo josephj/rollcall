@@ -1,6 +1,7 @@
 import { gql, useQuery } from '@apollo/client'
 import { t } from '@lingui/macro'
 import { Stack, Text } from 'native-base'
+import { Helmet } from 'react-helmet'
 import { useParams, useNavigate } from 'react-router-dom'
 
 import { Card, Layout } from './components'
@@ -25,20 +26,25 @@ export const Gatherings = () => {
   const gatherings = data?.allGathering || []
 
   return (
-    <Layout headerContent={t`Gatherings`} isLoading={loading}>
-      <Stack space={5}>
-        {gatherings.map(({ _id, title, name, slug }) => (
-          <Card
-            key={_id}
-            minWidth="250px"
-            onClick={() => navigate(`/${org}/gatherings/${slug.current}`)}
-            textAlign="center"
-          >
-            <Text fontWeight="500">{title}</Text>
-            <Text fontSize="11px">{name}</Text>
-          </Card>
-        ))}
-      </Stack>
-    </Layout>
+    <>
+      <Helmet>
+        <title>{org === 'efcglory' ? '榮益福音教會點名' : '雪梨台福教會點名'}</title>
+      </Helmet>
+      <Layout headerContent={t`Gatherings`} isLoading={loading}>
+        <Stack space={5}>
+          {gatherings.map(({ _id, title, name, slug }) => (
+            <Card
+              key={_id}
+              minWidth="250px"
+              onClick={() => navigate(`/${org}/gatherings/${slug.current}`)}
+              textAlign="center"
+            >
+              <Text fontWeight="500">{title}</Text>
+              <Text fontSize="11px">{name}</Text>
+            </Card>
+          ))}
+        </Stack>
+      </Layout>
+    </>
   )
 }
